@@ -74,4 +74,4 @@ doabem/
 
 ## Como executar
 
-A preencher na Sprint 02, quando houver código executável.
+Perfis `dev` (H2) e `prod` (PostgreSQL), variáveis de ambiente e comandos: ver [`backend/README.md`](backend/README.md#como-executar).

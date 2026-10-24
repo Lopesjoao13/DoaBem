@@ -1,6 +1,10 @@
-package br.univille.doabem.entries.entity;
+package br.univille.doabem.item.entity;
 
+import br.univille.doabem.category.entity.Category;
+import br.univille.doabem.common.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +26,7 @@ public class Item {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @NotBlank
     @Column(nullable = false, length = 120)
     private String name;
 
@@ -29,6 +34,7 @@ public class Item {
     @Column(name = "unit_of_measure", nullable = false, length = 4)
     private UnitOfMeasure unitOfMeasure;
 
+    @PositiveOrZero
     @Column(name = "min_stock", nullable = false, precision = 12, scale = 3)
     private BigDecimal minStock = BigDecimal.ZERO;
 
