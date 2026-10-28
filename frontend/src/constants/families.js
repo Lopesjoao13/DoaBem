@@ -1,0 +1,1 @@
+export const RECENT_DELIVERY_DAYS = 30
