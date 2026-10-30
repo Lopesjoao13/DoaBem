@@ -1,0 +1,78 @@
+:root {
+    --color-primary: #1f7a6b;
+    --color-primary-hover: #17604f;
+    --color-primary-soft: #e6f1ef;
+    --color-sidebar: #123f38;
+    --color-sidebar-text: #d9ebe7;
+    --color-accent: #e0a030;
+    --color-accent-soft: #fdf6e7;
+    --color-accent-text: #805400;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-bg: #f3f6f5;
+    --color-surface: #ffffff;
+    --color-border: #d7dedb;
+    --color-critical: #c0392b;
+    --color-critical-soft: #fdecea;
+    --color-success: #2e9b5f;
+    --color-success-soft: #e3f6e8;
+    --color-success-text: #1f6f43;
+    --color-info: #2f6db5;
+    --color-info-soft: #e6f1fe;
+    --color-focus: #575ecf;
+    --color-divider: rgba(255, 255, 255, 0.15);
+    --color-overlay: rgba(18, 63, 56, 0.4);
+    --color-chart-entries: #17907d;
+    --color-chart-deliveries: #2f6db5;
+    --color-chart-grid: #e5eae8;
+    --white: #ffffff;
+    --shadow-floating: 0 16px 40px rgba(31, 41, 55, 0.18);
+    --radius: 8px;
+    --radius-badge: 6px;
+    --topbar-height: 56px;
+    --sidebar-width: 240px;
+    --font-family: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-text);
+    background: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+    margin: 0;
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,0 +1,17 @@
+export const ROUTES = {
+    LOGIN: '/login',
+    DASHBOARD: '/dashboard',
+    STOCK: '/estoque',
+    ENTRIES: '/entradas',
+    ENTRY_NEW: '/entradas/nova',
+    ENTRY_DETAIL: '/entradas/:id',
+    REQUESTS: '/solicitacoes',
+    REQUEST_NEW: '/solicitacoes/nova',
+    REQUEST_DETAIL: '/solicitacoes/:id',
+    FAMILIES: '/familias',
+    FAMILY_DETAIL: '/familias/:id',
+    MOVEMENTS: '/movimentacoes',
+    ITEMS: '/itens',
+    USERS: '/usuarios',
+    FALLBACK: '*',
+}
