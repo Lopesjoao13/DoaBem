@@ -1,6 +1,6 @@
 import { Button } from '@/components/Button/Button.jsx'
 import { Dialog } from '@/components/Dialog/Dialog.jsx'
-import { DIALOG_VARIANTS } from '@/constants/dialog.js'
+import { DIALOG_SIZES } from '@/constants/dialog.js'
 import { Message } from './ConfirmDialog.styles.js'
 
 export const ConfirmDialog = ({
@@ -15,13 +15,13 @@ export const ConfirmDialog = ({
 }) => (
     <Dialog
         isOpen
-        variant={DIALOG_VARIANTS.MODAL}
+        size={DIALOG_SIZES.SM}
         title={title}
         onClose={onClose}
         footer={
             <>
-                <Button variant="outline" onClick={onClose} disabled={isRunning}>
-                    Voltar
+                <Button variant="outline" family="deny" onClick={onClose} disabled={isRunning}>
+                    Cancelar
                 </Button>
                 <Button family={family} onClick={onConfirm} disabled={isRunning}>
                     {isRunning ? 'Aguarde...' : confirmLabel}

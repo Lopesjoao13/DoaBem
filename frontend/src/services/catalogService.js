@@ -9,7 +9,7 @@ import {
     mockSetItemStatus,
     mockUpdateCategory,
     mockUpdateItem,
-} from './mock/mockCatalog.js'
+} from '@/services/mock/mockCatalog.js'
 
 const api = {
     listCategories: (filters) => httpClient.get('/categories', { ...LIST_ALL_PARAMS, ...filters }),

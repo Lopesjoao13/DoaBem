@@ -4,6 +4,7 @@ export const API_MESSAGES = {
     notFound: 'Registro não encontrado.',
     network: 'Não foi possível conectar ao servidor. Verifique a conexão e tente novamente.',
     unexpected: 'Não foi possível concluir a operação. Tente novamente.',
+    notImplemented: 'Esta funcionalidade ainda não está integrada à API.',
 }
 
 export const HTTP_STATUS = {
@@ -13,6 +14,7 @@ export const HTTP_STATUS = {
     NOT_FOUND: 404,
     CONFLICT: 409,
     UNPROCESSABLE_ENTITY: 422,
+    NOT_IMPLEMENTED: 501,
 }
 
 export const HTTP_STATUS_MESSAGES = {

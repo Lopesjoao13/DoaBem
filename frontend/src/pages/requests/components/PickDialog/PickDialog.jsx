@@ -6,27 +6,7 @@ import { REQUEST_MESSAGES } from '@/constants/requestMessages.js'
 import { TONES } from '@/constants/tones.js'
 import { useAsyncAction } from '@/hooks/useAsyncAction.js'
 import { pickRequest } from '@/services/requestService.js'
-import { formatQuantity } from '@/utils/formatters.js'
-
-const COLUMNS = [
-    { key: 'itemName', header: 'Item' },
-    {
-        key: 'approvedQty',
-        header: 'Aprovado',
-        align: 'right',
-        noWrap: true,
-        render: (row) => formatQuantity(row.approvedQty, row.unitOfMeasure),
-    },
-    {
-        key: 'available',
-        header: 'Disponível',
-        align: 'right',
-        noWrap: true,
-        render: (row) => formatQuantity(row.available, row.unitOfMeasure),
-    },
-]
-
-const getRowTone = (row) => (row.approvedQty > row.available ? TONES.CRITICAL : undefined)
+import { PICK_COLUMNS, getPickRowTone } from '@/pages/requests/constants/pickColumns.jsx'
 
 export const PickDialog = ({ request, onClose, onDone }) => {
     const { isRunning, run } = useAsyncAction()
@@ -53,7 +33,7 @@ export const PickDialog = ({ request, onClose, onDone }) => {
                         ? 'Há item com saldo insuficiente. A separação será bloqueada: revise a solicitação ou cancele e crie outra.'
                         : REQUEST_MESSAGES.pickNotice}
                 </Callout>
-                <DataTable columns={COLUMNS} rows={items} getRowTone={getRowTone} />
+                <DataTable columns={PICK_COLUMNS} rows={items} getRowTone={getPickRowTone} />
             </Stack>
         </ConfirmDialog>
     )

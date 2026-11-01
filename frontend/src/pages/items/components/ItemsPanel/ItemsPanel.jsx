@@ -1,87 +1,61 @@
-import { Badge } from '@/components/Badge/Badge.jsx'
-import { Button } from '@/components/Button/Button.jsx'
 import { DataTable } from '@/components/DataTable/DataTable.jsx'
-import { FilterChips } from '@/components/FilterChips/FilterChips.jsx'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination.js'
+import { Field } from '@/components/Field/Field.jsx'
+import { FilterBar, FilterSlot } from '@/components/FilterBar/FilterBar.jsx'
+import { SearchField } from '@/components/SearchField/SearchField.jsx'
+import { Select } from '@/components/Select/Select.jsx'
+import { StatusFilter } from '@/components/StatusFilter/StatusFilter.jsx'
 import { Panel } from '@/components/Panel/Panel.jsx'
-import { RowActions } from '@/components/RowActions/RowActions.jsx'
-import {
-    RECORD_STATUS,
-    RECORD_STATUS_LABELS,
-    RECORD_STATUS_TONES,
-} from '@/constants/recordStatus.js'
-import { STATUS_FILTER_OPTIONS } from '@/constants/stockFilters.js'
-import { UNIT_LABELS } from '@/constants/units.js'
-import { formatQuantity } from '@/utils/formatters.js'
-
-const BASE_COLUMNS = [
-    { key: 'name', header: 'Item' },
-    { key: 'categoryName', header: 'Categoria' },
-    { key: 'unitOfMeasure', header: 'Unidade', render: (row) => UNIT_LABELS[row.unitOfMeasure] },
-    {
-        key: 'minStock',
-        header: 'Estoque mínimo',
-        align: 'right',
-        noWrap: true,
-        render: (row) => formatQuantity(row.minStock, row.unitOfMeasure),
-    },
-    {
-        key: 'status',
-        header: 'Situação',
-        render: (row) => (
-            <Badge tone={RECORD_STATUS_TONES[row.status]}>{RECORD_STATUS_LABELS[row.status]}</Badge>
-        ),
-    },
-]
-
-const buildColumns = (onEdit, onToggleStatus) => {
-    if (!onEdit) return BASE_COLUMNS
-    return [
-        ...BASE_COLUMNS,
-        {
-            key: 'actions',
-            header: 'Ações',
-            align: 'right',
-            render: (row) => (
-                <RowActions>
-                    <Button variant="text" size="sm" onClick={() => onEdit(row)}>
-                        Editar
-                    </Button>
-                    <Button
-                        variant="text"
-                        size="sm"
-                        family={row.status === RECORD_STATUS.ACTIVE ? 'deny' : 'confirm'}
-                        onClick={() => onToggleStatus(row)}
-                    >
-                        {row.status === RECORD_STATUS.ACTIVE ? 'Inativar' : 'Reativar'}
-                    </Button>
-                </RowActions>
-            ),
-        },
-    ]
-}
+import { ALL_CATEGORIES } from '@/constants/filterOptions.js'
+import { buildItemsColumns } from '@/pages/items/constants/itemsColumns.jsx'
 
 export const ItemsPanel = ({ catalog, onEdit, onToggleStatus }) => (
-    <Panel
-        title="Itens"
-        subtitle="Filtre por situação"
-        padded={false}
-        action={
-            <FilterChips
-                label="Filtrar itens por situação"
-                options={STATUS_FILTER_OPTIONS}
-                value={catalog.itemStatus}
-                onChange={catalog.changeItemStatus}
+    <>
+        <FilterBar isFiltered={catalog.isItemsFiltered} onClear={catalog.clearItemFilters}>
+            <FilterSlot isGrowing>
+                <Field label="Buscar" htmlFor="items-search">
+                    <SearchField
+                        id="items-search"
+                        name="itemSearch"
+                        value={catalog.itemFilters.itemSearch}
+                        onChange={catalog.handleItemFilterChange}
+                        placeholder="Nome do item ou categoria"
+                    />
+                </Field>
+            </FilterSlot>
+            <FilterSlot>
+                <Field label="Categoria" htmlFor="items-category">
+                    <Select
+                        id="items-category"
+                        name="itemCategoryId"
+                        value={catalog.itemFilters.itemCategoryId}
+                        onChange={catalog.handleItemFilterChange}
+                        options={catalog.categoryOptions}
+                        placeholder={ALL_CATEGORIES}
+                    />
+                </Field>
+            </FilterSlot>
+            <FilterSlot>
+                <Field label="Situação" htmlFor="items-status">
+                    <StatusFilter
+                        id="items-status"
+                        value={catalog.itemFilters.itemStatus}
+                        onChange={catalog.changeItemStatus}
+                    />
+                </Field>
+            </FilterSlot>
+        </FilterBar>
+        <Panel title="Itens" padded={false}>
+            <DataTable
+                pageSize={DEFAULT_PAGE_SIZE}
+                columns={buildItemsColumns(onEdit, onToggleStatus)}
+                rows={catalog.items}
+                isLoading={catalog.isLoadingItems}
+                error={catalog.itemsError}
+                onRetry={catalog.reloadItems}
+                emptyTitle="Nenhum item encontrado"
+                emptyDescription="Ajuste os filtros ou cadastre itens para controlar o estoque."
             />
-        }
-    >
-        <DataTable
-            columns={buildColumns(onEdit, onToggleStatus)}
-            rows={catalog.items}
-            isLoading={catalog.isLoadingItems}
-            error={catalog.itemsError}
-            onRetry={catalog.reloadItems}
-            emptyTitle="Nenhum item nesta situação"
-            emptyDescription="Cadastre itens para controlar o estoque."
-        />
-    </Panel>
+        </Panel>
+    </>
 )

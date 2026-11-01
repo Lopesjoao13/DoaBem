@@ -22,6 +22,10 @@ const toEntrySummary = (entry) => ({
     anonymous: entry.anonymous,
     registeredBy: getUserName(entry.userId),
     createdAt: entry.createdAt,
+    receivedItems: entry.items.map(({ itemId }) => ({
+        itemId: String(itemId),
+        itemName: getItem(itemId).name,
+    })),
 })
 
 const toEntryItemResponse = (entryItem) => {

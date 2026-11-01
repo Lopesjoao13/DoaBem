@@ -1,6 +1,6 @@
 import { IconX } from '@tabler/icons-react'
 import { useEffect, useId, useRef } from 'react'
-import { DIALOG_VARIANTS } from '@/constants/dialog.js'
+import { DIALOG_KINDS, DIALOG_SIZES } from '@/constants/dialog.js'
 import {
     Body,
     CloseButton,
@@ -16,13 +16,15 @@ export const Dialog = ({
     isOpen,
     title,
     description,
-    variant = DIALOG_VARIANTS.DRAWER,
+    kind = DIALOG_KINDS.FORM,
+    size = DIALOG_SIZES.MD,
     footer,
     onClose,
     children,
 }) => {
     const titleId = useId()
     const panelRef = useRef(null)
+    const isView = kind === DIALOG_KINDS.VIEW
 
     useEffect(() => {
         if (isOpen) panelRef.current?.focus()
@@ -31,31 +33,33 @@ export const Dialog = ({
     if (!isOpen) return null
 
     const handleKeyDown = (event) => {
-        if (event.key === 'Escape') onClose()
+        if (event.key === 'Escape' && isView) onClose()
     }
 
     const handleOverlayClick = (event) => {
-        if (event.target === event.currentTarget) onClose()
+        if (isView && event.target === event.currentTarget) onClose()
     }
 
     return (
-        <Overlay $variant={variant} onMouseDown={handleOverlayClick} onKeyDown={handleKeyDown}>
+        <Overlay onMouseDown={handleOverlayClick} onKeyDown={handleKeyDown}>
             <Panel
                 ref={panelRef}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={titleId}
                 tabIndex={-1}
-                $variant={variant}
+                $size={size}
             >
                 <Header>
                     <div>
                         <Title id={titleId}>{title}</Title>
                         {description && <Description>{description}</Description>}
                     </div>
-                    <CloseButton type="button" onClick={onClose} aria-label="Fechar">
-                        <IconX size={18} stroke={2} />
-                    </CloseButton>
+                    {isView && (
+                        <CloseButton type="button" onClick={onClose} aria-label="Fechar">
+                            <IconX size={18} stroke={2} />
+                        </CloseButton>
+                    )}
                 </Header>
                 <Body>{children}</Body>
                 {footer && <Footer>{footer}</Footer>}

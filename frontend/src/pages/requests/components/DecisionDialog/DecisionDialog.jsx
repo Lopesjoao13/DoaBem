@@ -10,7 +10,7 @@ import { Textarea } from '@/components/Textarea/Textarea.jsx'
 import { REQUEST_MESSAGES } from '@/constants/requestMessages.js'
 import { TONES } from '@/constants/tones.js'
 import { UNIT_LABELS } from '@/constants/units.js'
-import { useDecisionForm } from '@/hooks/useDecisionForm.js'
+import { useDecisionForm } from '@/pages/requests/hooks/useDecisionForm.js'
 import { formatQuantity } from '@/utils/formatters.js'
 import { ItemMeta, ItemName, ItemRow, Items } from './DecisionDialog.styles.js'
 
@@ -32,8 +32,13 @@ export const DecisionDialog = ({ request, onClose, onDone }) => {
             onClose={onClose}
             footer={
                 <>
-                    <Button variant="outline" onClick={onClose} disabled={form.isSubmitting}>
-                        Voltar
+                    <Button
+                        variant="outline"
+                        family="deny"
+                        onClick={onClose}
+                        disabled={form.isSubmitting}
+                    >
+                        Cancelar
                     </Button>
                     <Button
                         variant="outline"

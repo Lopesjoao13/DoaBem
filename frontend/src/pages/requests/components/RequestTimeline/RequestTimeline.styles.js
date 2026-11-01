@@ -14,7 +14,7 @@ export const Event = styled.li`
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 
     &::before {
         content: '';
@@ -25,7 +25,7 @@ export const Event = styled.li`
         height: 10px;
         border: 2px solid var(--color-surface);
         border-radius: 50%;
-        background: var(--color-primary);
+        background: var(--teal-500);
     }
 `
 
@@ -36,7 +36,7 @@ export const EventTitle = styled.span`
 
 export const Meta = styled.span`
     font-size: 12px;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `
 
 export const Detail = styled.p`

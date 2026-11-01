@@ -1,5 +1,5 @@
-import styled, { css, keyframes } from 'styled-components'
-import { DIALOG_VARIANTS } from '@/constants/dialog.js'
+import styled, { keyframes } from 'styled-components'
+import { DIALOG_WIDTHS } from '@/constants/dialog.js'
 
 const fadeIn = keyframes`
   from {
@@ -7,52 +7,34 @@ const fadeIn = keyframes`
   }
 `
 
-const slideIn = keyframes`
+const scaleIn = keyframes`
   from {
-    transform: translateX(24px);
+    opacity: 0;
+    transform: scale(0.96);
   }
 `
-
-const VARIANT_OVERLAY = {
-    [DIALOG_VARIANTS.DRAWER]: css`
-        justify-content: flex-end;
-    `,
-    [DIALOG_VARIANTS.MODAL]: css`
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-    `,
-}
-
-const VARIANT_PANEL = {
-    [DIALOG_VARIANTS.DRAWER]: css`
-        width: min(520px, 100vw);
-        height: 100%;
-        animation: ${slideIn} 180ms ease-out;
-    `,
-    [DIALOG_VARIANTS.MODAL]: css`
-        width: min(480px, 100%);
-        max-height: calc(100vh - 48px);
-        border-radius: var(--radius);
-    `,
-}
 
 export const Overlay = styled.div`
     position: fixed;
     inset: 0;
     z-index: 50;
     display: flex;
-    background: var(--color-overlay);
-    animation: ${fadeIn} 160ms ease-out;
-    ${({ $variant }) => VARIANT_OVERLAY[$variant]}
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--black-alpha-45);
+    animation: ${fadeIn} var(--duration-base) var(--ease-out);
 `
 
 export const Panel = styled.div`
     display: flex;
     flex-direction: column;
+    width: min(${({ $size }) => DIALOG_WIDTHS[$size]}, 100%);
+    max-height: calc(100vh - 48px);
+    border-radius: var(--radius-xl);
     background: var(--color-surface);
-    box-shadow: var(--shadow-floating);
-    ${({ $variant }) => VARIANT_PANEL[$variant]}
+    box-shadow: var(--shadow-modal);
+    animation: ${scaleIn} var(--duration-base) var(--ease-out);
 
     &:focus {
         outline: none;
@@ -64,7 +46,7 @@ export const Header = styled.div`
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
-    padding: 20px 24px;
+    padding: 24px 32px;
     border-bottom: 1px solid var(--color-border);
 `
 
@@ -76,7 +58,7 @@ export const Title = styled.h2`
 export const Description = styled.p`
     margin-top: 4px;
     font-size: 14px;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `
 
 export const CloseButton = styled.button`
@@ -84,9 +66,9 @@ export const CloseButton = styled.button`
     place-items: center;
     padding: 4px;
     border: none;
-    border-radius: var(--radius-badge);
+    border-radius: var(--radius-xs);
     background: transparent;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
     cursor: pointer;
 
     &:hover {
@@ -97,13 +79,13 @@ export const CloseButton = styled.button`
 export const Body = styled.div`
     flex: 1;
     overflow-y: auto;
-    padding: 24px;
+    padding: 24px 32px;
 `
 
 export const Footer = styled.div`
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    padding: 16px 24px;
+    padding: 16px 32px;
     border-top: 1px solid var(--color-border);
 `

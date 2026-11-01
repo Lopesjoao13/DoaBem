@@ -15,17 +15,11 @@ export const DateLabel = styled.label`
     font-weight: 600;
 `
 
-export const DateInput = styled.input`
-    padding: 8px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    background: var(--color-surface);
-    color: var(--color-text);
-    font: inherit;
-    font-size: 14px;
+export const FieldSlot = styled.div`
+    width: 180px;
+`
 
-    &:focus {
-        outline: none;
-        border-color: var(--color-primary);
-    }
+export const Updated = styled.span`
+    font-size: 12px;
+    color: var(--color-fg-muted);
 `

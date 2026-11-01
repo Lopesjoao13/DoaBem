@@ -3,12 +3,13 @@ import { Button } from '@/components/Button/Button.jsx'
 import { Callout } from '@/components/Callout/Callout.jsx'
 import { Dialog } from '@/components/Dialog/Dialog.jsx'
 import { Field } from '@/components/Field/Field.jsx'
-import { FormField } from '@/components/FormField/FormField.jsx'
 import { FormRow, FormStack } from '@/components/FormLayout/FormLayout.jsx'
 import { Textarea } from '@/components/Textarea/Textarea.jsx'
-import { FAMILY_MESSAGES } from '@/constants/familyMessages.js'
+import { Input } from '@/components/Input/Input.jsx'
+import { FAMILY_MESSAGES } from '@/pages/families/constants/familyMessages.js'
 import { TONES } from '@/constants/tones.js'
-import { useFamilyForm } from '@/hooks/useFamilyForm.js'
+import { useFamilyForm } from '@/pages/families/hooks/useFamilyForm.js'
+import { getDescribedBy } from '@/utils/a11y.js'
 
 export const FamilyDialog = ({ family, onClose, onSaved }) => {
     const formId = useId()
@@ -23,7 +24,7 @@ export const FamilyDialog = ({ family, onClose, onSaved }) => {
             onClose={onClose}
             footer={
                 <>
-                    <Button variant="outline" onClick={onClose}>
+                    <Button variant="outline" family="deny" onClick={onClose}>
                         Cancelar
                     </Button>
                     <Button type="submit" form={formId} disabled={form.isSubmitting}>
@@ -34,41 +35,61 @@ export const FamilyDialog = ({ family, onClose, onSaved }) => {
         >
             <FormStack id={formId} onSubmit={form.submit} noValidate>
                 {form.formError && <Callout tone={TONES.CRITICAL}>{form.formError}</Callout>}
-                <FormField
+                <Field
                     label="Nome do responsável"
-                    id={`${formId}-name`}
-                    name="responsibleName"
-                    value={values.responsibleName}
-                    onChange={form.handleChange}
+                    htmlFor={`${formId}-name`}
                     error={errors.responsibleName}
-                    autoFocus
-                />
+                >
+                    <Input
+                        id={`${formId}-name`}
+                        error={errors.responsibleName}
+                        aria-describedby={getDescribedBy(`${formId}-name`, {
+                            error: errors.responsibleName,
+                        })}
+                        name="responsibleName"
+                        value={values.responsibleName}
+                        onChange={form.handleChange}
+                        autoFocus
+                    />
+                </Field>
                 <FormRow>
-                    <FormField
-                        label="Telefone (opcional)"
-                        id={`${formId}-phone`}
-                        name="phone"
-                        type="tel"
-                        value={values.phone}
-                        onChange={form.handleChange}
-                    />
-                    <FormField
+                    <Field label="Telefone (opcional)" htmlFor={`${formId}-phone`}>
+                        <Input
+                            id={`${formId}-phone`}
+                            aria-describedby={getDescribedBy(`${formId}-phone`, {})}
+                            name="phone"
+                            type="tel"
+                            value={values.phone}
+                            onChange={form.handleChange}
+                        />
+                    </Field>
+                    <Field
                         label="Nº de integrantes"
-                        id={`${formId}-size`}
-                        name="householdSize"
-                        inputMode="numeric"
-                        value={values.householdSize}
-                        onChange={form.handleChange}
+                        htmlFor={`${formId}-size`}
                         error={errors.householdSize}
-                    />
+                    >
+                        <Input
+                            id={`${formId}-size`}
+                            error={errors.householdSize}
+                            aria-describedby={getDescribedBy(`${formId}-size`, {
+                                error: errors.householdSize,
+                            })}
+                            name="householdSize"
+                            inputMode="numeric"
+                            value={values.householdSize}
+                            onChange={form.handleChange}
+                        />
+                    </Field>
                 </FormRow>
-                <FormField
-                    label="Bairro / localidade (opcional)"
-                    id={`${formId}-neighborhood`}
-                    name="neighborhood"
-                    value={values.neighborhood}
-                    onChange={form.handleChange}
-                />
+                <Field label="Bairro / localidade (opcional)" htmlFor={`${formId}-neighborhood`}>
+                    <Input
+                        id={`${formId}-neighborhood`}
+                        aria-describedby={getDescribedBy(`${formId}-neighborhood`, {})}
+                        name="neighborhood"
+                        value={values.neighborhood}
+                        onChange={form.handleChange}
+                    />
+                </Field>
                 <Field
                     label="Observações (opcional)"
                     htmlFor={`${formId}-notes`}

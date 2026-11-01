@@ -8,20 +8,9 @@ import { FormStack } from '@/components/FormLayout/FormLayout.jsx'
 import { Textarea } from '@/components/Textarea/Textarea.jsx'
 import { REQUEST_MESSAGES } from '@/constants/requestMessages.js'
 import { TONES } from '@/constants/tones.js'
-import { useReasonForm } from '@/hooks/useReasonForm.js'
+import { useReasonForm } from '@/pages/requests/hooks/useReasonForm.js'
 import { deliverRequest } from '@/services/requestService.js'
-import { formatQuantity } from '@/utils/formatters.js'
-
-const COLUMNS = [
-    { key: 'itemName', header: 'Item' },
-    {
-        key: 'approvedQty',
-        header: 'Quantidade a entregar',
-        align: 'right',
-        noWrap: true,
-        render: (row) => formatQuantity(row.approvedQty, row.unitOfMeasure),
-    },
-]
+import { DELIVER_COLUMNS } from '@/pages/requests/constants/deliverColumns.jsx'
 
 export const DeliverDialog = ({ request, onClose, onDone }) => {
     const formId = useId()
@@ -42,8 +31,13 @@ export const DeliverDialog = ({ request, onClose, onDone }) => {
             onClose={onClose}
             footer={
                 <>
-                    <Button variant="outline" onClick={onClose} disabled={form.isSubmitting}>
-                        Voltar
+                    <Button
+                        variant="outline"
+                        family="deny"
+                        onClick={onClose}
+                        disabled={form.isSubmitting}
+                    >
+                        Cancelar
                     </Button>
                     <Button
                         type="submit"
@@ -61,7 +55,7 @@ export const DeliverDialog = ({ request, onClose, onDone }) => {
                 <Callout tone={TONES.INFO} title="Resumo fechado">
                     {REQUEST_MESSAGES.deliverNotice}
                 </Callout>
-                <DataTable columns={COLUMNS} rows={items} />
+                <DataTable columns={DELIVER_COLUMNS} rows={items} />
                 <Field label="Observação (opcional)" htmlFor={`${formId}-notes`}>
                     <Textarea
                         id={`${formId}-notes`}

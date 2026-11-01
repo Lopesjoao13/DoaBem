@@ -1,8 +1,6 @@
 import { useCallback, useMemo } from 'react'
-import { generatePath, useNavigate, useSearchParams } from 'react-router-dom'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { REQUEST_MESSAGES } from '@/constants/requestMessages.js'
-import { ROUTES } from '@/constants/routes.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useForm } from '@/hooks/useForm.js'
@@ -12,8 +10,7 @@ import { listBeneficiaries } from '@/services/beneficiaryService.js'
 import { createRequest, getDeliverySummary } from '@/services/requestService.js'
 import { createLineKey, removeLine, updateLine } from '@/utils/lines.js'
 import { validateQuantity } from '@/utils/quantity.js'
-
-const EMPTY_ROWS = []
+import { EMPTY_ROWS } from '@/constants/emptyValues.js'
 
 const createEmptyLine = () => ({ key: createLineKey(), itemId: '', requestedQty: '' })
 
@@ -46,10 +43,8 @@ const useDeliverySummary = (beneficiaryId) => {
     return useFetch(loadSummary)
 }
 
-export const useRequestForm = () => {
-    const navigate = useNavigate()
+export const useRequestForm = ({ familyId = '', onSaved }) => {
     const toast = useToast()
-    const [searchParams] = useSearchParams()
     const itemOptions = useItemOptions({ withStock: true })
 
     const loadFamilies = useCallback(() => listBeneficiaries({ status: RECORD_STATUS.ACTIVE }), [])
@@ -65,21 +60,26 @@ export const useRequestForm = () => {
 
     const form = useForm({
         initialValues: {
-            beneficiaryId: searchParams.get('familyId') ?? '',
+            beneficiaryId: familyId,
             lines: [createEmptyLine()],
         },
         validate: buildValidator(itemOptions.itemsById),
         onSubmit: async (values) => {
             const { id } = await createRequest(values)
             toast.success(REQUEST_MESSAGES.created)
-            navigate(generatePath(ROUTES.REQUEST_DETAIL, { id }), { replace: true })
+            onSaved(id)
         },
     })
 
     const deliverySummary = useDeliverySummary(form.values.beneficiaryId)
 
+    const isDirty =
+        form.values.beneficiaryId !== familyId ||
+        form.values.lines.some((line) => line.itemId !== '' || line.requestedQty !== '')
+
     return {
         ...form,
+        isDirty,
         itemOptions,
         familyOptions,
         isLoadingFamilies: families.isLoading,

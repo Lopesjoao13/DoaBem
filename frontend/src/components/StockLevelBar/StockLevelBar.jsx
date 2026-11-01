@@ -1,8 +1,6 @@
 import { formatQuantity } from '@/utils/formatters.js'
 import { Fill, MinLabel, Track, Wrapper } from './StockLevelBar.styles.js'
-
-const FULL_SCALE_FACTOR = 2
-const MAX_PERCENT = 100
+import { FULL_SCALE_FACTOR, MAX_PERCENT } from '@/constants/stockLevels.js'
 
 const getFillPercent = (available, minStock) => {
     if (available <= 0) return 0

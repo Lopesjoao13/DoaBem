@@ -1,10 +1,12 @@
+import { ExportButton } from '@/components/ExportButton/ExportButton.jsx'
 import { PageHeader } from '@/components/PageHeader/PageHeader.jsx'
 import { Pagination } from '@/components/Pagination/Pagination.jsx'
 import { Panel } from '@/components/Panel/Panel.jsx'
-import { useMovements } from '@/hooks/useMovements.js'
-import { MovementDrawer } from './components/MovementDrawer/MovementDrawer.jsx'
-import { MovementFilters } from './components/MovementFilters/MovementFilters.jsx'
-import { MovementsTable } from './components/MovementsTable/MovementsTable.jsx'
+import { useMovements } from '@/pages/movements/hooks/useMovements.js'
+import { MOVEMENTS_EXPORT_COLUMNS } from '@/pages/movements/constants/movementsExport.js'
+import { MovementDetailDialog } from '@/pages/movements/components/MovementDetailDialog/MovementDetailDialog.jsx'
+import { MovementFilters } from '@/pages/movements/components/MovementFilters/MovementFilters.jsx'
+import { MovementsTable } from '@/pages/movements/components/MovementsTable/MovementsTable.jsx'
 
 const MovementsPage = () => {
     const movements = useMovements()
@@ -14,12 +16,20 @@ const MovementsPage = () => {
         <>
             <PageHeader
                 title="Movimentações"
+                actions={
+                    <ExportButton
+                        filename="movimentacoes"
+                        columns={MOVEMENTS_EXPORT_COLUMNS}
+                        getRows={movements.fetchAll}
+                    />
+                }
                 description="Histórico auditável de entradas, saídas por entrega, ajustes e estornos. Reservas aparecem no detalhe da solicitação."
             />
             <MovementFilters
                 filters={movements.filters}
                 itemOptions={movements.itemOptions}
                 userOptions={movements.userOptions}
+                isFiltered={movements.isFiltered}
                 onChange={movements.handleFilterChange}
                 onClear={movements.clearFilters}
             />
@@ -27,6 +37,7 @@ const MovementsPage = () => {
                 <MovementsTable
                     rows={page.content}
                     isLoading={movements.isLoading}
+                    isRefreshing={movements.isRefreshing}
                     error={movements.error}
                     onRetry={movements.reload}
                     onOpen={movements.openMovement}
@@ -36,12 +47,13 @@ const MovementsPage = () => {
                         page={page.page}
                         totalPages={page.totalPages}
                         totalElements={page.totalElements}
+                        isDisabled={movements.isRefreshing}
                         onChange={movements.changePage}
                     />
                 )}
             </Panel>
             {movements.selectedMovementId && (
-                <MovementDrawer
+                <MovementDetailDialog
                     key={movements.selectedMovementId}
                     movementId={movements.selectedMovementId}
                     onClose={movements.closeMovement}

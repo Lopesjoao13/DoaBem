@@ -26,5 +26,5 @@ export const ItemName = styled.p`
 
 export const ItemMeta = styled.p`
     font-size: 12px;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `

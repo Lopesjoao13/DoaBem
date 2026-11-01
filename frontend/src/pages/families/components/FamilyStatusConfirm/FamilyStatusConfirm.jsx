@@ -1,5 +1,5 @@
 import { ConfirmDialog } from '@/components/ConfirmDialog/ConfirmDialog.jsx'
-import { FAMILY_MESSAGES } from '@/constants/familyMessages.js'
+import { FAMILY_MESSAGES } from '@/pages/families/constants/familyMessages.js'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { useAsyncAction } from '@/hooks/useAsyncAction.js'
 import { setBeneficiaryStatus } from '@/services/beneficiaryService.js'

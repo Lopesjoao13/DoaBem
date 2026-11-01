@@ -12,7 +12,7 @@ export const List = styled.ul`
 export const DeliveryItem = styled.li`
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     font-size: 14px;
 `
 
@@ -23,10 +23,10 @@ export const DeliveryMeta = styled.div`
     gap: 8px;
 
     span {
-        color: var(--color-text-muted);
+        color: var(--color-fg-muted);
     }
 `
 
 export const Items = styled.span`
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `
