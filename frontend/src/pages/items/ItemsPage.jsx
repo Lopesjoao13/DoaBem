@@ -2,17 +2,19 @@ import { IconPlus } from '@tabler/icons-react'
 import { Button } from '@/components/Button/Button.jsx'
 import { Callout } from '@/components/Callout/Callout.jsx'
 import { PageHeader } from '@/components/PageHeader/PageHeader.jsx'
-import { CATALOG_MESSAGES, CATALOG_TARGETS } from '@/constants/catalogMessages.js'
+import { SegmentedControl } from '@/components/SegmentedControl/SegmentedControl.jsx'
+import { CATALOG_TAB_OPTIONS, CATALOG_TABS } from '@/pages/items/constants/catalogTabs.js'
+import { CATALOG_MESSAGES, CATALOG_TARGETS } from '@/pages/items/constants/catalogMessages.js'
 import { PERMISSIONS } from '@/constants/permissions.js'
 import { TONES } from '@/constants/tones.js'
-import { useCatalog } from '@/hooks/useCatalog.js'
+import { useCatalog } from '@/pages/items/hooks/useCatalog.js'
 import { useDisclosure } from '@/hooks/useDisclosure.js'
 import { usePermission } from '@/hooks/usePermission.js'
-import { CategoriesPanel } from './components/CategoriesPanel/CategoriesPanel.jsx'
-import { CategoryDialog } from './components/CategoryDialog/CategoryDialog.jsx'
-import { ItemDialog } from './components/ItemDialog/ItemDialog.jsx'
-import { ItemsPanel } from './components/ItemsPanel/ItemsPanel.jsx'
-import { StatusConfirm } from './components/StatusConfirm/StatusConfirm.jsx'
+import { CategoriesPanel } from '@/pages/items/components/CategoriesPanel/CategoriesPanel.jsx'
+import { CategoryDialog } from '@/pages/items/components/CategoryDialog/CategoryDialog.jsx'
+import { ItemDialog } from '@/pages/items/components/ItemDialog/ItemDialog.jsx'
+import { ItemsPanel } from '@/pages/items/components/ItemsPanel/ItemsPanel.jsx'
+import { StatusConfirm } from '@/pages/items/components/StatusConfirm/StatusConfirm.jsx'
 
 const ItemsPage = () => {
     const catalog = useCatalog()
@@ -57,28 +59,38 @@ const ItemsPage = () => {
                 }
             />
             {!canManage && <Callout tone={TONES.INFO}>{CATALOG_MESSAGES.readOnly}</Callout>}
-            <ItemsPanel
-                catalog={catalog}
-                onEdit={canManage ? itemDialog.open : undefined}
-                onToggleStatus={
-                    canManage
-                        ? (item) => statusConfirm.open({ kind: CATALOG_TARGETS.ITEM, record: item })
-                        : undefined
-                }
+            <SegmentedControl
+                label="Seção"
+                options={CATALOG_TAB_OPTIONS}
+                value={catalog.tab}
+                onChange={catalog.changeTab}
             />
-            <CategoriesPanel
-                catalog={catalog}
-                onEdit={canManage ? categoryDialog.open : undefined}
-                onToggleStatus={
-                    canManage
-                        ? (category) =>
-                              statusConfirm.open({
-                                  kind: CATALOG_TARGETS.CATEGORY,
-                                  record: category,
-                              })
-                        : undefined
-                }
-            />
+            {catalog.tab === CATALOG_TABS.ITEMS ? (
+                <ItemsPanel
+                    catalog={catalog}
+                    onEdit={canManage ? itemDialog.open : undefined}
+                    onToggleStatus={
+                        canManage
+                            ? (item) =>
+                                  statusConfirm.open({ kind: CATALOG_TARGETS.ITEM, record: item })
+                            : undefined
+                    }
+                />
+            ) : (
+                <CategoriesPanel
+                    catalog={catalog}
+                    onEdit={canManage ? categoryDialog.open : undefined}
+                    onToggleStatus={
+                        canManage
+                            ? (category) =>
+                                  statusConfirm.open({
+                                      kind: CATALOG_TARGETS.CATEGORY,
+                                      record: category,
+                                  })
+                            : undefined
+                    }
+                />
+            )}
             {itemDialog.isOpen && (
                 <ItemDialog
                     item={itemDialog.payload}

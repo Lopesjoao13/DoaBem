@@ -1,36 +1,31 @@
 import { IconPlus } from '@tabler/icons-react'
-import { generatePath, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button/Button.jsx'
 import { DataTable } from '@/components/DataTable/DataTable.jsx'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination.js'
+import { ExportButton } from '@/components/ExportButton/ExportButton.jsx'
 import { PageHeader } from '@/components/PageHeader/PageHeader.jsx'
 import { Panel } from '@/components/Panel/Panel.jsx'
-import { TextLink } from '@/components/TextLink/TextLink.jsx'
-import { ROUTES } from '@/constants/routes.js'
-import { useEntries } from '@/hooks/useEntries.js'
-import { describeEntrySource } from '@/utils/entries.js'
-import { formatDate } from '@/utils/formatters.js'
-
-const COLUMNS = [
-    { key: 'entryDate', header: 'Data', noWrap: true, render: (row) => formatDate(row.entryDate) },
-    {
-        key: 'source',
-        header: 'Entrada / origem',
-        render: (row) => `Entrada #${row.id} — ${describeEntrySource(row)}`,
-    },
-    { key: 'registeredBy', header: 'Registrado por' },
-    {
-        key: 'actions',
-        header: 'Ações',
-        align: 'right',
-        render: (row) => (
-            <TextLink to={generatePath(ROUTES.ENTRY_DETAIL, { id: row.id })}>Ver detalhe</TextLink>
-        ),
-    },
-]
+import { ENTRY_PARAM } from '@/constants/entries.js'
+import { useDetailParam } from '@/hooks/useDetailParam.js'
+import { useDisclosure } from '@/hooks/useDisclosure.js'
+import { useEntries } from '@/pages/entries/hooks/useEntries.js'
+import { ENTRIES_EXPORT_COLUMNS } from '@/pages/entries/constants/entriesExport.js'
+import { EntriesToolbar } from '@/pages/entries/components/EntriesToolbar/EntriesToolbar.jsx'
+import { EntryDetailDialog } from '@/pages/entries/components/EntryDetailDialog/EntryDetailDialog.jsx'
+import { EntryDialog } from '@/components/EntryDialog/EntryDialog.jsx'
+import { buildEntriesColumns } from '@/pages/entries/constants/entriesColumns.jsx'
 
 const EntriesPage = () => {
-    const navigate = useNavigate()
-    const { entries, error, isLoading, reload } = useEntries()
+    const entriesState = useEntries()
+    const { entries, error, isLoading, reload } = entriesState
+    const dialog = useDisclosure()
+    const detail = useDetailParam(ENTRY_PARAM)
+    const { id: detailId, open: openDetail, close: closeDetail } = detail
+
+    const handleSaved = () => {
+        dialog.close()
+        reload()
+    }
 
     return (
         <>
@@ -38,23 +33,47 @@ const EntriesPage = () => {
                 title="Entradas de doação"
                 description="Doações recebidas. Cada linha da entrada gera uma movimentação no histórico do item."
                 actions={
-                    <Button onClick={() => navigate(ROUTES.ENTRY_NEW)}>
-                        <IconPlus size={18} stroke={2} />
-                        Nova entrada
-                    </Button>
+                    <>
+                        <ExportButton
+                            filename="entradas"
+                            columns={ENTRIES_EXPORT_COLUMNS}
+                            getRows={() => entries}
+                        />
+                        <Button onClick={() => dialog.open()}>
+                            <IconPlus size={18} stroke={2} />
+                            Nova entrada
+                        </Button>
+                    </>
                 }
+            />
+            <EntriesToolbar
+                filters={entriesState.filters}
+                registeredByOptions={entriesState.registeredByOptions}
+                itemOptions={entriesState.itemOptions}
+                isFiltered={entriesState.isFiltered}
+                onChange={entriesState.handleFilterChange}
+                onClear={entriesState.clearFilters}
             />
             <Panel padded={false}>
                 <DataTable
-                    columns={COLUMNS}
+                    pageSize={DEFAULT_PAGE_SIZE}
+                    columns={buildEntriesColumns(openDetail)}
                     rows={entries}
                     isLoading={isLoading && entries.length === 0}
                     error={error}
                     onRetry={reload}
                     emptyTitle="Nenhuma entrada registrada"
-                    emptyDescription="Registre a primeira doação recebida."
+                    emptyDescription={
+                        entriesState.isFiltered
+                            ? 'Ajuste os filtros para ver outras entradas.'
+                            : 'Registre a primeira doação recebida.'
+                    }
                 />
             </Panel>
+            {detailId && (
+                <EntryDetailDialog key={detailId} entryId={detailId} onClose={closeDetail} />
+            )}
+            {dialog.isOpen && <EntryDialog onClose={dialog.close} onSaved={handleSaved} />}
         </>
     )
 }

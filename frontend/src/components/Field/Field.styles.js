@@ -3,22 +3,22 @@ import styled from 'styled-components'
 export const StyledField = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     min-width: 0;
 `
 
 export const Label = styled.label`
     font-size: 14px;
     font-weight: 600;
-    color: var(--color-text);
+    color: var(--color-fg);
 `
 
 export const Hint = styled.span`
     font-size: 12px;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `
 
 export const ErrorText = styled.span`
     font-size: 12px;
-    color: var(--color-critical);
+    color: var(--red-500);
 `

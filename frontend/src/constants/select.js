@@ -1,0 +1,1 @@
+export const SEARCHABLE_MIN_OPTIONS = 7

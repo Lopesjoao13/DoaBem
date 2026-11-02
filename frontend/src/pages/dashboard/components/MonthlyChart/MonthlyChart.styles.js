@@ -1,13 +1,11 @@
 import styled from 'styled-components'
-import { TooltipBox } from '@/components/ChartTooltip/ChartTooltip.styles.js'
-
-const PLOT_HEIGHT = '200px'
-const AXIS_WIDTH = '32px'
+import { TooltipBox } from '@/pages/dashboard/components/ChartTooltip/ChartTooltip.styles.js'
+import { CHART_PLOT_HEIGHT, CHART_AXIS_WIDTH } from '@/pages/dashboard/constants/dashboardUi.js'
 
 export const Chart = styled.div`
     display: grid;
-    grid-template-columns: ${AXIS_WIDTH} 1fr;
-    grid-template-rows: ${PLOT_HEIGHT} auto;
+    grid-template-columns: ${CHART_AXIS_WIDTH} 1fr;
+    grid-template-rows: ${CHART_PLOT_HEIGHT} auto;
     row-gap: 8px;
 `
 
@@ -22,7 +20,7 @@ export const TickLabel = styled.span`
     font-size: 12px;
     font-variant-numeric: tabular-nums;
     line-height: 1;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
     transform: translateY(50%);
 `
 
@@ -39,15 +37,14 @@ export const GridLine = styled.span`
     bottom: ${({ $bottom }) => `${$bottom}%`};
     left: 0;
     height: 1px;
-    background: ${({ $bottom }) =>
-        $bottom === 0 ? 'var(--color-border)' : 'var(--color-chart-grid)'};
+    background: ${({ $bottom }) => ($bottom === 0 ? 'var(--color-border)' : 'var(--gray-200)')};
 `
 
 export const Group = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
-    gap: 2px;
+    gap: 4px;
 `
 
 export const Bar = styled.span`
@@ -76,6 +73,18 @@ export const BarSlot = styled.span`
     }
 `
 
+export const BarValue = styled.span`
+    position: absolute;
+    bottom: calc(${({ $height }) => $height}% + 4px);
+    left: 50%;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    transform: translateX(-50%);
+    color: var(--color-fg);
+`
+
 export const MonthLabels = styled.div`
     display: grid;
     grid-auto-columns: 1fr;
@@ -87,5 +96,5 @@ export const MonthLabel = styled.span`
     font-size: 12px;
     text-align: center;
     text-transform: capitalize;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `

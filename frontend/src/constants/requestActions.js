@@ -9,3 +9,5 @@ export const REQUEST_DIALOGS = {
     DELIVER: 'DELIVER',
     CANCEL: 'CANCEL',
 }
+
+export const REQUEST_PARAM = 'solicitacao'

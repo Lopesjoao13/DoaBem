@@ -6,18 +6,14 @@ import { Dialog } from '@/components/Dialog/Dialog.jsx'
 import { Field } from '@/components/Field/Field.jsx'
 import { FormStack } from '@/components/FormLayout/FormLayout.jsx'
 import { Textarea } from '@/components/Textarea/Textarea.jsx'
-import { DIALOG_VARIANTS } from '@/constants/dialog.js'
-import { MOVEMENT_MESSAGES } from '@/constants/movementMessages.js'
+import { DIALOG_SIZES } from '@/constants/dialog.js'
+import { MOVEMENT_MESSAGES } from '@/pages/movements/constants/movementMessages.js'
 import { MOVEMENT_TYPE_LABELS, MOVEMENT_TYPES } from '@/constants/movementTypes.js'
 import { TONES } from '@/constants/tones.js'
-import { useReverseForm } from '@/hooks/useReverseForm.js'
+import { useReverseForm } from '@/pages/movements/hooks/useReverseForm.js'
 import { formatQuantity } from '@/utils/formatters.js'
 import { CheckError } from './ReverseDialog.styles.js'
-
-const TYPE_HINTS = {
-    [MOVEMENT_TYPES.ENTRY]: MOVEMENT_MESSAGES.entryReverseHint,
-    [MOVEMENT_TYPES.DELIVERY]: MOVEMENT_MESSAGES.deliveryReverseHint,
-}
+import { TYPE_HINTS } from '@/pages/movements/constants/movementOptions.js'
 
 export const ReverseDialog = ({ movement, onClose, onDone }) => {
     const formId = useId()
@@ -27,7 +23,7 @@ export const ReverseDialog = ({ movement, onClose, onDone }) => {
     return (
         <Dialog
             isOpen
-            variant={DIALOG_VARIANTS.MODAL}
+            size={DIALOG_SIZES.SM}
             title={`Estornar lançamento #${movement.id}?`}
             description={`${MOVEMENT_TYPE_LABELS[movement.type]} · ${movement.itemName} · ${formatQuantity(movement.quantity, movement.unitOfMeasure)}`}
             onClose={onClose}

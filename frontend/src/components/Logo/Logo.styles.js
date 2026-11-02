@@ -9,7 +9,7 @@ export const StyledLogo = styled.div`
     color: var(--white);
 
     span {
-        color: var(--color-accent);
+        color: var(--amber-400);
     }
 `
 
@@ -19,6 +19,6 @@ export const LogoMark = styled.div`
     width: ${({ $compact }) => ($compact ? '28px' : '40px')};
     height: ${({ $compact }) => ($compact ? '28px' : '40px')};
     border-radius: var(--radius);
-    background: var(--color-accent);
-    color: var(--color-sidebar);
+    background: var(--amber-400);
+    color: var(--teal-900);
 `

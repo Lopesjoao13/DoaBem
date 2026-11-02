@@ -7,7 +7,7 @@ export const StyledTextLink = styled(Link)`
     gap: 4px;
     font-size: 14px;
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--teal-500);
     text-decoration: none;
 
     &:hover {

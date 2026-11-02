@@ -1,5 +1,6 @@
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 import { Button } from '@/components/Button/Button.jsx'
+import { DateField } from '@/components/DateField/DateField.jsx'
 import { Field } from '@/components/Field/Field.jsx'
 import { Input } from '@/components/Input/Input.jsx'
 import { Select } from '@/components/Select/Select.jsx'
@@ -8,8 +9,7 @@ import { getDescribedBy } from '@/utils/a11y.js'
 import { formatQuantity } from '@/utils/formatters.js'
 import { getQuantityStep } from '@/utils/quantity.js'
 import { LineGrid, Lines, RemoveSlot, StyledItemLinesEditor } from './ItemLinesEditor.styles.js'
-
-const SELECT_ITEM = { value: '', label: 'Selecione o item' }
+import { SELECT_ITEM } from '@/constants/formPlaceholders.js'
 
 const LineRow = ({
     line,
@@ -66,9 +66,8 @@ const LineRow = ({
             </Field>
             {expiryHint && (
                 <Field label="Validade (opcional)" htmlFor={`${id}-expiry`} hint={expiryHint}>
-                    <Input
+                    <DateField
                         id={`${id}-expiry`}
-                        type="date"
                         value={line.expiryDate}
                         onChange={(event) => onChange(line.key, 'expiryDate', event.target.value)}
                     />

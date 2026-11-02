@@ -1,5 +1,5 @@
 import { ConfirmDialog } from '@/components/ConfirmDialog/ConfirmDialog.jsx'
-import { USER_MESSAGES } from '@/constants/userMessages.js'
+import { USER_MESSAGES } from '@/pages/users/constants/userMessages.js'
 import { useAsyncAction } from '@/hooks/useAsyncAction.js'
 import { setUserActive } from '@/services/userService.js'
 

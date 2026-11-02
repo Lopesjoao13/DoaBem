@@ -8,7 +8,9 @@ export const Shell = styled.div`
 
 export const Body = styled.div`
     display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-columns: ${({ $isCollapsed }) =>
+            $isCollapsed ? 'var(--sidebar-width-collapsed)' : 'var(--sidebar-width)'} 1fr;
+    transition: grid-template-columns var(--duration-base) var(--ease-out);
     flex: 1;
 `
 
@@ -21,6 +23,6 @@ export const Content = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
-    max-width: 1120px;
+    max-width: 1680px;
     margin: 0 auto;
 `

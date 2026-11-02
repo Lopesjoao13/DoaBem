@@ -2,9 +2,9 @@ import styled from 'styled-components'
 import { STOCK_LEVELS } from '@/constants/stockLevels.js'
 
 const LEVEL_COLORS = {
-    [STOCK_LEVELS.CRITICAL]: 'var(--color-critical)',
-    [STOCK_LEVELS.LOW]: 'var(--color-accent)',
-    [STOCK_LEVELS.NORMAL]: 'var(--color-success)',
+    [STOCK_LEVELS.CRITICAL]: 'var(--red-500)',
+    [STOCK_LEVELS.LOW]: 'var(--amber-400)',
+    [STOCK_LEVELS.NORMAL]: 'var(--green-400)',
 }
 
 export const Wrapper = styled.div`
@@ -32,5 +32,5 @@ export const Fill = styled.div`
 export const MinLabel = styled.span`
     font-size: 12px;
     white-space: nowrap;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `

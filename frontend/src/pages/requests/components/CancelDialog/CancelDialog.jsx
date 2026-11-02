@@ -5,11 +5,11 @@ import { Dialog } from '@/components/Dialog/Dialog.jsx'
 import { Field } from '@/components/Field/Field.jsx'
 import { FormStack } from '@/components/FormLayout/FormLayout.jsx'
 import { Textarea } from '@/components/Textarea/Textarea.jsx'
-import { DIALOG_VARIANTS } from '@/constants/dialog.js'
+import { DIALOG_SIZES } from '@/constants/dialog.js'
 import { REQUEST_MESSAGES } from '@/constants/requestMessages.js'
 import { REQUEST_STATUS } from '@/constants/requestStatus.js'
 import { TONES } from '@/constants/tones.js'
-import { useReasonForm } from '@/hooks/useReasonForm.js'
+import { useReasonForm } from '@/pages/requests/hooks/useReasonForm.js'
 import { cancelRequest } from '@/services/requestService.js'
 
 export const CancelDialog = ({ request, onClose, onDone }) => {
@@ -24,7 +24,7 @@ export const CancelDialog = ({ request, onClose, onDone }) => {
     return (
         <Dialog
             isOpen
-            variant={DIALOG_VARIANTS.MODAL}
+            size={DIALOG_SIZES.SM}
             title={
                 isPicked
                     ? `Cancelar separação #${request.id}?`

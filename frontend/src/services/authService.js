@@ -1,6 +1,6 @@
 import { USE_MOCK } from '@/constants/api.js'
 import { httpClient } from './httpClient.js'
-import { mockLogin } from './mock/mockAuth.js'
+import { mockLogin } from '@/services/mock/mockAuth.js'
 
 const MS_PER_SECOND = 1000
 

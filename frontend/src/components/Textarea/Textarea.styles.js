@@ -4,5 +4,8 @@ import { fieldControlStyles, readOnlyStyles } from '@/components/Input/Input.sty
 export const StyledTextarea = styled.textarea`
     ${fieldControlStyles}
     ${readOnlyStyles}
-  resize: vertical;
+    height: auto;
+    min-height: 96px;
+    padding: 12px 16px;
+    resize: vertical;
 `

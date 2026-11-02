@@ -1,9 +1,11 @@
 import { AsyncContent } from '@/components/AsyncContent/AsyncContent.jsx'
 import { DeliveryList } from '@/components/DeliveryHistory/DeliveryHistory.jsx'
+import { FormSection } from '@/components/FormSection/FormSection.jsx'
 import { Panel } from '@/components/Panel/Panel.jsx'
 import { StateMessage } from '@/components/StateMessage/StateMessage.jsx'
-import { useFamilyHistory } from '@/hooks/useFamilyHistory.js'
-import { FamilyRequestsTable } from '../FamilyRequestsTable/FamilyRequestsTable.jsx'
+import { Stack } from '@/components/Stack/Stack.jsx'
+import { useFamilyHistory } from '@/pages/families/hooks/useFamilyHistory.js'
+import { FamilyRequestsTable } from '@/pages/families/components/FamilyRequestsTable/FamilyRequestsTable.jsx'
 
 export const FamilyHistory = ({ familyId }) => {
     const { history, error, reload } = useFamilyHistory(familyId)
@@ -11,15 +13,13 @@ export const FamilyHistory = ({ familyId }) => {
     return (
         <AsyncContent data={history} error={error} onRetry={reload}>
             {(data) => (
-                <>
-                    <Panel
-                        title="Solicitações"
-                        subtitle="Data, estado e responsável"
-                        padded={false}
-                    >
-                        <FamilyRequestsTable requests={data.requests} />
-                    </Panel>
-                    <Panel title="Entregas" subtitle="Itens efetivamente entregues">
+                <Stack gap={32}>
+                    <FormSection title="Solicitações" subtitle="Data, estado e responsável">
+                        <Panel padded={false}>
+                            <FamilyRequestsTable requests={data.requests} />
+                        </Panel>
+                    </FormSection>
+                    <FormSection title="Entregas" subtitle="Itens efetivamente entregues">
                         {data.deliveries.length > 0 ? (
                             <DeliveryList deliveries={data.deliveries} />
                         ) : (
@@ -28,8 +28,8 @@ export const FamilyHistory = ({ familyId }) => {
                                 description="As entregas concluídas aparecem aqui."
                             />
                         )}
-                    </Panel>
-                </>
+                    </FormSection>
+                </Stack>
             )}
         </AsyncContent>
     )

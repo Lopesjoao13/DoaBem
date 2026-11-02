@@ -1,12 +1,13 @@
 import { LIST_ALL_PARAMS, USE_MOCK } from '@/constants/api.js'
 import { httpClient } from './httpClient.js'
+import { mockOnly } from './mockOnly.js'
 import {
     mockCreateUser,
     mockListUserOptions,
     mockListUsers,
     mockSetUserActive,
     mockUpdateUser,
-} from './mock/mockUsers.js'
+} from '@/services/mock/mockUsers.js'
 
 const api = {
     listUsers: () => httpClient.get('/users', LIST_ALL_PARAMS),
@@ -24,4 +25,4 @@ const mock = {
 
 export const { listUsers, createUser, updateUser, setUserActive } = USE_MOCK ? mock : api
 
-export const listUserOptions = () => mockListUserOptions()
+export const listUserOptions = mockOnly(() => mockListUserOptions())

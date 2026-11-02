@@ -3,8 +3,7 @@ import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { listItems } from '@/services/catalogService.js'
 import { getStock } from '@/services/stockService.js'
-
-const EMPTY_ROWS = []
+import { EMPTY_ROWS } from '@/constants/emptyValues.js'
 
 const loadCatalogItems = async () => {
     const page = await listItems({ status: RECORD_STATUS.ACTIVE })

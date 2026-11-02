@@ -8,10 +8,10 @@ const spin = keyframes`
 `
 
 const VARIANT_COLORS = {
-    [STATE_VARIANTS.LOADING]: 'var(--color-primary)',
-    [STATE_VARIANTS.EMPTY]: 'var(--color-text-muted)',
-    [STATE_VARIANTS.ERROR]: 'var(--color-critical)',
-    [STATE_VARIANTS.DENIED]: 'var(--color-critical)',
+    [STATE_VARIANTS.LOADING]: 'var(--teal-500)',
+    [STATE_VARIANTS.EMPTY]: 'var(--color-fg-muted)',
+    [STATE_VARIANTS.ERROR]: 'var(--red-500)',
+    [STATE_VARIANTS.DENIED]: 'var(--red-500)',
 }
 
 export const StyledStateMessage = styled.div`
@@ -50,5 +50,5 @@ export const Title = styled.p`
 export const Description = styled.p`
     max-width: 420px;
     font-size: 14px;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `

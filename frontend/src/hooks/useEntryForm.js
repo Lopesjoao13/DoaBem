@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { generatePath, useNavigate } from 'react-router-dom'
 import { ENTRY_MESSAGES } from '@/constants/entryMessages.js'
-import { ROUTES } from '@/constants/routes.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useItemOptions } from '@/hooks/useItemOptions.js'
@@ -50,8 +48,7 @@ const toEntryRequest = ({ entryDate, source, anonymous, notes, lines }) => ({
     })),
 })
 
-export const useEntryForm = () => {
-    const navigate = useNavigate()
+export const useEntryForm = ({ onSaved }) => {
     const toast = useToast()
     const itemOptions = useItemOptions()
     const [isReviewing, setIsReviewing] = useState(false)
@@ -68,7 +65,7 @@ export const useEntryForm = () => {
         onSubmit: async (values) => {
             const { id } = await createEntry(toEntryRequest(values))
             toast.success(ENTRY_MESSAGES.saved)
-            navigate(generatePath(ROUTES.ENTRY_DETAIL, { id }), { replace: true })
+            onSaved(id)
         },
     })
 
@@ -97,8 +94,15 @@ export const useEntryForm = () => {
         if (!isSaved) setIsReviewing(false)
     }
 
+    const isDirty =
+        form.values.source !== '' ||
+        form.values.anonymous ||
+        form.values.notes !== '' ||
+        form.values.lines.some((line) => line.itemId !== '' || line.quantity !== '')
+
     return {
         ...form,
+        isDirty,
         itemOptions,
         isReviewing,
         addLine,
