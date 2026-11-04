@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: doabem-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: doabem
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - doabem-data:/var/lib/postgresql
+ 
+volumes:
+  doabem-data:
