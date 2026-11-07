@@ -1,6 +1,9 @@
-package br.univille.doabem.entries.entity;
+package br.univille.doabem.beneficiary.entity;
 
+import br.univille.doabem.common.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +21,7 @@ public class Beneficiary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(name = "responsible_name", nullable = false, length = 120)
     private String responsibleName;
 
@@ -27,6 +31,7 @@ public class Beneficiary {
     @Column(length = 80)
     private String neighborhood;
 
+    @Min(1)
     @Column(name = "household_size", nullable = false)
     private int householdSize;
 
