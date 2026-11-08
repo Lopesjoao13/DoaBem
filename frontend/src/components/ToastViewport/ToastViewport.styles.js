@@ -9,9 +9,9 @@ const slideIn = keyframes`
 `
 
 const TYPE_COLORS = {
-    [TOAST_TYPES.SUCCESS]: 'var(--color-success)',
-    [TOAST_TYPES.ERROR]: 'var(--color-critical)',
-    [TOAST_TYPES.INFO]: 'var(--color-info)',
+    [TOAST_TYPES.SUCCESS]: 'var(--green-400)',
+    [TOAST_TYPES.ERROR]: 'var(--red-500)',
+    [TOAST_TYPES.INFO]: 'var(--blue-500)',
 }
 
 export const Viewport = styled.div`
@@ -31,9 +31,9 @@ export const Toast = styled.div`
     gap: 12px;
     padding: 12px 16px;
     border: 1px solid var(--color-border);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     background: var(--color-surface);
-    box-shadow: var(--shadow-floating);
+    box-shadow: var(--shadow-toast);
     animation: ${slideIn} 160ms ease-out;
 
     > svg {
@@ -50,11 +50,11 @@ export const Message = styled.p`
 export const CloseButton = styled.button`
     display: grid;
     place-items: center;
-    padding: 2px;
+    padding: 4px;
     border: none;
-    border-radius: var(--radius-badge);
+    border-radius: var(--radius-xs);
     background: transparent;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
     cursor: pointer;
 
     &:hover {

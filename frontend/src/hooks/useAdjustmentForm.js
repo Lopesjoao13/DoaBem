@@ -8,8 +8,7 @@ import { useToast } from '@/hooks/useToast.js'
 import { createAdjustment, getStock } from '@/services/stockService.js'
 import { parseQuantity, validateQuantity } from '@/utils/quantity.js'
 import { isBlank } from '@/utils/validation.js'
-
-const EMPTY_ROWS = []
+import { EMPTY_ROWS } from '@/constants/emptyValues.js'
 
 const validate = (values, item) => {
     const errors = {}

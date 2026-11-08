@@ -17,6 +17,9 @@ export const formatDate = (value) => parseDate(value).toLocaleDateString(LOCALE)
 export const formatDateTime = (value) =>
     parseDate(value).toLocaleString(LOCALE, { dateStyle: 'short', timeStyle: 'short' })
 
+export const formatTime = (value) =>
+    parseDate(value).toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-digit' })
+
 export const formatMonth = (monthKey) =>
     parseDate(`${monthKey}-01`).toLocaleDateString(LOCALE, { month: 'short' }).replace('.', '')
 

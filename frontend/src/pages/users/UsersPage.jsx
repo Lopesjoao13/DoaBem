@@ -1,69 +1,16 @@
 import { IconPlus } from '@tabler/icons-react'
-import { Badge } from '@/components/Badge/Badge.jsx'
 import { Button } from '@/components/Button/Button.jsx'
 import { DataTable } from '@/components/DataTable/DataTable.jsx'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination.js'
 import { PageHeader } from '@/components/PageHeader/PageHeader.jsx'
 import { Panel } from '@/components/Panel/Panel.jsx'
-import { RowActions } from '@/components/RowActions/RowActions.jsx'
-import {
-    RECORD_STATUS,
-    RECORD_STATUS_LABELS,
-    RECORD_STATUS_TONES,
-} from '@/constants/recordStatus.js'
-import { ROLE_LABELS } from '@/constants/roles.js'
 import { useAuth } from '@/hooks/useAuth.js'
 import { useDisclosure } from '@/hooks/useDisclosure.js'
-import { useUsers } from '@/hooks/useUsers.js'
-import { formatDate } from '@/utils/formatters.js'
-import { UserActionConfirm } from './components/UserActionConfirm/UserActionConfirm.jsx'
-import { UserDialog } from './components/UserDialog/UserDialog.jsx'
-
-const toStatus = (active) => (active ? RECORD_STATUS.ACTIVE : RECORD_STATUS.INACTIVE)
-
-const isSameUser = (user, email) => user?.email.toLowerCase() === email
-
-const buildColumns = ({ currentEmail, onEdit, onToggleActive }) => [
-    { key: 'name', header: 'Nome' },
-    { key: 'email', header: 'E-mail' },
-    { key: 'role', header: 'Perfil', render: (row) => ROLE_LABELS[row.role] },
-    {
-        key: 'active',
-        header: 'Status',
-        render: (row) => (
-            <Badge tone={RECORD_STATUS_TONES[toStatus(row.active)]}>
-                {RECORD_STATUS_LABELS[toStatus(row.active)]}
-            </Badge>
-        ),
-    },
-    {
-        key: 'createdAt',
-        header: 'Criado em',
-        noWrap: true,
-        render: (row) => formatDate(row.createdAt),
-    },
-    {
-        key: 'actions',
-        header: 'Ações',
-        align: 'right',
-        render: (row) => (
-            <RowActions>
-                <Button variant="text" size="sm" onClick={() => onEdit(row)}>
-                    Editar
-                </Button>
-                {!isSameUser(row, currentEmail) && (
-                    <Button
-                        variant="text"
-                        size="sm"
-                        family={row.active ? 'deny' : 'confirm'}
-                        onClick={() => onToggleActive(row)}
-                    >
-                        {row.active ? 'Desativar' : 'Reativar'}
-                    </Button>
-                )}
-            </RowActions>
-        ),
-    },
-]
+import { useUsers } from '@/pages/users/hooks/useUsers.js'
+import { UsersToolbar } from '@/pages/users/components/UsersToolbar/UsersToolbar.jsx'
+import { UserActionConfirm } from '@/pages/users/components/UserActionConfirm/UserActionConfirm.jsx'
+import { UserDialog } from '@/pages/users/components/UserDialog/UserDialog.jsx'
+import { buildUsersColumns, isSameUser } from '@/pages/users/constants/usersColumns.jsx'
 
 const UsersPage = () => {
     const { user: currentUser } = useAuth()
@@ -88,9 +35,16 @@ const UsersPage = () => {
                     </Button>
                 }
             />
+            <UsersToolbar
+                filters={users.filters}
+                isFiltered={users.isFiltered}
+                onChange={users.handleFilterChange}
+                onClear={users.clearFilters}
+            />
             <Panel padded={false}>
                 <DataTable
-                    columns={buildColumns({
+                    pageSize={DEFAULT_PAGE_SIZE}
+                    columns={buildUsersColumns({
                         currentEmail: currentUser.email,
                         onEdit: userDialog.open,
                         onToggleActive: statusConfirm.open,
@@ -99,7 +53,8 @@ const UsersPage = () => {
                     isLoading={users.isLoading}
                     error={users.error}
                     onRetry={users.reload}
-                    emptyTitle="Nenhum usuário"
+                    emptyTitle="Nenhum usuário encontrado"
+                    emptyDescription="Ajuste os filtros para ver outros usuários."
                 />
             </Panel>
             {userDialog.isOpen && (

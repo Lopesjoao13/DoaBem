@@ -1,5 +1,5 @@
 import { ConfirmDialog } from '@/components/ConfirmDialog/ConfirmDialog.jsx'
-import { CATALOG_MESSAGES, CATALOG_TARGETS } from '@/constants/catalogMessages.js'
+import { CATALOG_MESSAGES, CATALOG_TARGETS } from '@/pages/items/constants/catalogMessages.js'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { useAsyncAction } from '@/hooks/useAsyncAction.js'
 import { setCategoryActive, setItemStatus } from '@/services/catalogService.js'

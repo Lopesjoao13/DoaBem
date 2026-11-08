@@ -1,10 +1,9 @@
-import { generatePath } from 'react-router-dom'
 import { Callout } from '@/components/Callout/Callout.jsx'
 import { TextLink } from '@/components/TextLink/TextLink.jsx'
 import { RECENT_DELIVERY_DAYS } from '@/constants/families.js'
-import { ROUTES } from '@/constants/routes.js'
 import { TONES } from '@/constants/tones.js'
 import { formatDateTime, formatQuantity } from '@/utils/formatters.js'
+import { buildRequestLink } from '@/utils/links.js'
 import { DeliveryItem, DeliveryMeta, Items, List } from './DeliveryHistory.styles.js'
 
 const describeItems = (items) =>
@@ -19,7 +18,7 @@ export const DeliveryList = ({ deliveries }) => (
                 <DeliveryMeta>
                     <strong>{formatDateTime(delivery.deliveredAt)}</strong>
                     <span>por {delivery.deliveredBy}</span>
-                    <TextLink to={generatePath(ROUTES.REQUEST_DETAIL, { id: delivery.requestId })}>
+                    <TextLink to={buildRequestLink(delivery.requestId)}>
                         Solicitação #{delivery.requestId}
                     </TextLink>
                 </DeliveryMeta>

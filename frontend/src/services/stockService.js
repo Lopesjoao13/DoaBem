@@ -1,5 +1,6 @@
-import { mockCreateAdjustment, mockGetStock } from './mock/mockStock.js'
+import { mockOnly } from './mockOnly.js'
+import { mockCreateAdjustment, mockGetStock } from '@/services/mock/mockStock.js'
 
-export const getStock = (filters) => mockGetStock(filters)
+export const getStock = mockOnly((filters) => mockGetStock(filters))
 
-export const createAdjustment = (payload) => mockCreateAdjustment(payload)
+export const createAdjustment = mockOnly((payload) => mockCreateAdjustment(payload))

@@ -1,54 +1,32 @@
 import { IconPlus } from '@tabler/icons-react'
-import { generatePath, useNavigate } from 'react-router-dom'
-import { Badge } from '@/components/Badge/Badge.jsx'
 import { Button } from '@/components/Button/Button.jsx'
 import { DataTable } from '@/components/DataTable/DataTable.jsx'
-import { FilterChips } from '@/components/FilterChips/FilterChips.jsx'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination.js'
 import { PageHeader } from '@/components/PageHeader/PageHeader.jsx'
 import { Panel } from '@/components/Panel/Panel.jsx'
+import { Field } from '@/components/Field/Field.jsx'
+import { FilterBar, FilterSlot } from '@/components/FilterBar/FilterBar.jsx'
 import { SearchField } from '@/components/SearchField/SearchField.jsx'
-import { TextLink } from '@/components/TextLink/TextLink.jsx'
-import { Toolbar } from '@/components/Toolbar/Toolbar.jsx'
-import { RECORD_STATUS_LABELS, RECORD_STATUS_TONES } from '@/constants/recordStatus.js'
-import { ROUTES } from '@/constants/routes.js'
-import { STATUS_FILTER_OPTIONS } from '@/constants/stockFilters.js'
+import { StatusFilter } from '@/components/StatusFilter/StatusFilter.jsx'
+import { FAMILY_PARAM } from '@/constants/families.js'
+import { useDetailParam } from '@/hooks/useDetailParam.js'
 import { useDisclosure } from '@/hooks/useDisclosure.js'
-import { useFamilies } from '@/hooks/useFamilies.js'
-import { FamilyDialog } from './components/FamilyDialog/FamilyDialog.jsx'
-
-const COLUMNS = [
-    { key: 'id', header: 'Nº', render: (row) => `#${row.id}` },
-    { key: 'responsibleName', header: 'Responsável' },
-    { key: 'householdSize', header: 'Integrantes', align: 'right' },
-    { key: 'neighborhood', header: 'Bairro', render: (row) => row.neighborhood || '—' },
-    { key: 'phone', header: 'Telefone', noWrap: true, render: (row) => row.phone || '—' },
-    {
-        key: 'status',
-        header: 'Situação',
-        render: (row) => (
-            <Badge tone={RECORD_STATUS_TONES[row.status]}>{RECORD_STATUS_LABELS[row.status]}</Badge>
-        ),
-    },
-    {
-        key: 'actions',
-        header: 'Ações',
-        align: 'right',
-        render: (row) => (
-            <TextLink to={generatePath(ROUTES.FAMILY_DETAIL, { id: row.id })}>
-                Ver detalhes
-            </TextLink>
-        ),
-    },
-]
+import { useFamilies } from '@/pages/families/hooks/useFamilies.js'
+import { FamilyDetailDialog } from '@/pages/families/components/FamilyDetailDialog/FamilyDetailDialog.jsx'
+import { FamilyDialog } from '@/pages/families/components/FamilyDialog/FamilyDialog.jsx'
+import { buildFamiliesColumns } from '@/pages/families/constants/familiesColumns.jsx'
 
 const FamiliesPage = () => {
-    const navigate = useNavigate()
     const families = useFamilies()
     const dialog = useDisclosure()
 
+    const detail = useDetailParam(FAMILY_PARAM)
+    const { id: detailId, open: openDetail, close: closeDetail } = detail
+
     const handleSaved = (family) => {
         dialog.close()
-        navigate(generatePath(ROUTES.FAMILY_DETAIL, { id: family.id }))
+        families.reload()
+        openDetail(family.id)
     }
 
     return (
@@ -63,23 +41,31 @@ const FamiliesPage = () => {
                     </Button>
                 }
             />
-            <Toolbar>
-                <SearchField
-                    value={families.search}
-                    onChange={families.handleSearchChange}
-                    placeholder="Buscar pelo nome do responsável"
-                    aria-label="Buscar famílias"
-                />
-                <FilterChips
-                    label="Filtrar por situação"
-                    options={STATUS_FILTER_OPTIONS}
-                    value={families.status}
-                    onChange={families.changeStatus}
-                />
-            </Toolbar>
+            <FilterBar isFiltered={families.isFiltered} onClear={families.clearFilters}>
+                <FilterSlot isGrowing>
+                    <Field label="Buscar" htmlFor="families-search">
+                        <SearchField
+                            id="families-search"
+                            value={families.search}
+                            onChange={families.handleSearchChange}
+                            placeholder="Nome do responsável"
+                        />
+                    </Field>
+                </FilterSlot>
+                <FilterSlot>
+                    <Field label="Situação" htmlFor="families-status">
+                        <StatusFilter
+                            id="families-status"
+                            value={families.status}
+                            onChange={families.changeStatus}
+                        />
+                    </Field>
+                </FilterSlot>
+            </FilterBar>
             <Panel padded={false}>
                 <DataTable
-                    columns={COLUMNS}
+                    pageSize={DEFAULT_PAGE_SIZE}
+                    columns={buildFamiliesColumns(openDetail)}
                     rows={families.families}
                     isLoading={families.isLoading}
                     error={families.error}
@@ -88,6 +74,14 @@ const FamiliesPage = () => {
                     emptyDescription="Ajuste a busca ou cadastre uma nova família."
                 />
             </Panel>
+            {detailId && (
+                <FamilyDetailDialog
+                    key={detailId}
+                    familyId={detailId}
+                    onClose={closeDetail}
+                    onChanged={families.reload}
+                />
+            )}
             {dialog.isOpen && <FamilyDialog onClose={dialog.close} onSaved={handleSaved} />}
         </>
     )

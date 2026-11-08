@@ -1,7 +1,12 @@
-import { mockGetMovement, mockListMovements, mockReverseMovement } from './mock/mockMovements.js'
+import { mockOnly } from './mockOnly.js'
+import {
+    mockGetMovement,
+    mockListMovements,
+    mockReverseMovement,
+} from '@/services/mock/mockMovements.js'
 
-export const listMovements = (filters) => mockListMovements(filters)
+export const listMovements = mockOnly((filters) => mockListMovements(filters))
 
-export const getMovement = (id) => mockGetMovement(id)
+export const getMovement = mockOnly((id) => mockGetMovement(id))
 
-export const reverseMovement = (id, reversal) => mockReverseMovement(id, reversal)
+export const reverseMovement = mockOnly((id, reversal) => mockReverseMovement(id, reversal))

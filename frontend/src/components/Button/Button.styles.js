@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components'
 
 const FAMILY_COLORS = {
-    main: 'var(--color-primary)',
-    confirm: 'var(--color-success)',
-    deny: 'var(--color-critical)',
+    main: 'var(--teal-500)',
+    confirm: 'var(--green-400)',
+    deny: 'var(--red-500)',
 }
 
 const VARIANT_STYLES = {
@@ -38,12 +38,16 @@ const VARIANT_STYLES = {
 
 const SIZE_STYLES = {
     sm: css`
-        padding: 4px 8px;
-        font-size: 13px;
+        padding: 8px 12px;
+        font-size: 12px;
     `,
     md: css`
         padding: 10px 16px;
         font-size: 14px;
+    `,
+    lg: css`
+        padding: 12px 24px;
+        font-size: 16px;
     `,
 }
 
@@ -54,7 +58,8 @@ export const StyledButton = styled.button`
     gap: 8px;
     border-radius: var(--radius);
     font: inherit;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: var(--tracking-base);
     white-space: nowrap;
     cursor: pointer;
 

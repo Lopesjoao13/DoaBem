@@ -1,4 +1,5 @@
-import { mockGetDeliverySummary, mockGetFamilyHistory } from './mock/mockDeliveries.js'
+import { mockOnly } from './mockOnly.js'
+import { mockGetDeliverySummary, mockGetFamilyHistory } from '@/services/mock/mockDeliveries.js'
 import {
     mockCancelRequest,
     mockCreateRequest,
@@ -7,22 +8,22 @@ import {
     mockGetRequest,
     mockListRequests,
     mockPickRequest,
-} from './mock/mockRequests.js'
+} from '@/services/mock/mockRequests.js'
 
-export const listRequests = (filters) => mockListRequests(filters)
+export const listRequests = mockOnly((filters) => mockListRequests(filters))
 
-export const getRequest = (id) => mockGetRequest(id)
+export const getRequest = mockOnly((id) => mockGetRequest(id))
 
-export const createRequest = (request) => mockCreateRequest(request)
+export const createRequest = mockOnly((request) => mockCreateRequest(request))
 
-export const decideRequest = (id, decision) => mockDecideRequest(id, decision)
+export const decideRequest = mockOnly((id, decision) => mockDecideRequest(id, decision))
 
-export const pickRequest = (id) => mockPickRequest(id)
+export const pickRequest = mockOnly((id) => mockPickRequest(id))
 
-export const deliverRequest = (id, delivery) => mockDeliverRequest(id, delivery)
+export const deliverRequest = mockOnly((id, delivery) => mockDeliverRequest(id, delivery))
 
-export const cancelRequest = (id, cancellation) => mockCancelRequest(id, cancellation)
+export const cancelRequest = mockOnly((id, cancellation) => mockCancelRequest(id, cancellation))
 
-export const getDeliverySummary = (beneficiaryId) => mockGetDeliverySummary(beneficiaryId)
+export const getDeliverySummary = mockOnly((beneficiaryId) => mockGetDeliverySummary(beneficiaryId))
 
-export const getFamilyHistory = (beneficiaryId) => mockGetFamilyHistory(beneficiaryId)
+export const getFamilyHistory = mockOnly((beneficiaryId) => mockGetFamilyHistory(beneficiaryId))

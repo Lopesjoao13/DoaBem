@@ -1,49 +1,28 @@
 import { IconPlus } from '@tabler/icons-react'
-import { generatePath, useNavigate } from 'react-router-dom'
-import { Badge } from '@/components/Badge/Badge.jsx'
 import { Button } from '@/components/Button/Button.jsx'
 import { DataTable } from '@/components/DataTable/DataTable.jsx'
-import { FilterChips } from '@/components/FilterChips/FilterChips.jsx'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination.js'
 import { PageHeader } from '@/components/PageHeader/PageHeader.jsx'
 import { Panel } from '@/components/Panel/Panel.jsx'
-import { TextLink } from '@/components/TextLink/TextLink.jsx'
-import {
-    REQUEST_STATUS_LABELS,
-    REQUEST_STATUS_TONES,
-    REQUEST_TABS,
-} from '@/constants/requestStatus.js'
-import { ROUTES } from '@/constants/routes.js'
-import { useRequests } from '@/hooks/useRequests.js'
-import { formatDate } from '@/utils/formatters.js'
-
-const COLUMNS = [
-    { key: 'id', header: 'Nº', render: (row) => `#${row.id}` },
-    { key: 'createdAt', header: 'Data', noWrap: true, render: (row) => formatDate(row.createdAt) },
-    { key: 'beneficiaryName', header: 'Família' },
-    { key: 'itemCount', header: 'Itens', align: 'right' },
-    { key: 'requestedBy', header: 'Criada por' },
-    {
-        key: 'status',
-        header: 'Estado',
-        render: (row) => (
-            <Badge tone={REQUEST_STATUS_TONES[row.status]}>
-                {REQUEST_STATUS_LABELS[row.status]}
-            </Badge>
-        ),
-    },
-    {
-        key: 'actions',
-        header: 'Ações',
-        align: 'right',
-        render: (row) => (
-            <TextLink to={generatePath(ROUTES.REQUEST_DETAIL, { id: row.id })}>Abrir</TextLink>
-        ),
-    },
-]
+import { REQUEST_PARAM } from '@/constants/requestActions.js'
+import { useDetailParam } from '@/hooks/useDetailParam.js'
+import { useDisclosure } from '@/hooks/useDisclosure.js'
+import { useRequests } from '@/pages/requests/hooks/useRequests.js'
+import { RequestDetailDialog } from '@/pages/requests/components/RequestDetailDialog/RequestDetailDialog.jsx'
+import { RequestDialog } from '@/components/RequestDialog/RequestDialog.jsx'
+import { RequestsToolbar } from '@/pages/requests/components/RequestsToolbar/RequestsToolbar.jsx'
+import { buildRequestsColumns } from '@/pages/requests/constants/requestsColumns.jsx'
 
 const RequestsPage = () => {
-    const navigate = useNavigate()
     const requests = useRequests()
+    const dialog = useDisclosure()
+    const detail = useDetailParam(REQUEST_PARAM)
+    const { id: detailId, open: openDetail, close: closeDetail } = detail
+
+    const handleSaved = () => {
+        dialog.close()
+        requests.reload()
+    }
 
     return (
         <>
@@ -51,30 +30,43 @@ const RequestsPage = () => {
                 title="Solicitações"
                 description="Pedidos das famílias: análise, separação com reserva e entrega."
                 actions={
-                    <Button onClick={() => navigate(ROUTES.REQUEST_NEW)}>
+                    <Button onClick={() => dialog.open()}>
                         <IconPlus size={18} stroke={2} />
                         Nova solicitação
                     </Button>
                 }
             />
-            <FilterChips
-                label="Filtrar por estado"
-                options={REQUEST_TABS}
-                value={requests.tab}
+            <RequestsToolbar
+                tab={requests.tab}
                 counts={requests.counts}
-                onChange={requests.changeTab}
+                filters={requests.filters}
+                requestedByOptions={requests.requestedByOptions}
+                isFiltered={requests.isFiltered}
+                onTabChange={requests.changeTab}
+                onChange={requests.handleFilterChange}
+                onClear={requests.clearFilters}
             />
             <Panel padded={false}>
                 <DataTable
-                    columns={COLUMNS}
+                    pageSize={DEFAULT_PAGE_SIZE}
+                    columns={buildRequestsColumns(openDetail)}
                     rows={requests.requests}
                     isLoading={requests.isLoading}
                     error={requests.error}
                     onRetry={requests.reload}
-                    emptyTitle="Nenhuma solicitação neste estado"
-                    emptyDescription="Troque o filtro ou crie uma nova solicitação."
+                    emptyTitle="Nenhuma solicitação encontrada"
+                    emptyDescription="Ajuste os filtros ou crie uma nova solicitação."
                 />
             </Panel>
+            {detailId && (
+                <RequestDetailDialog
+                    key={detailId}
+                    requestId={detailId}
+                    onClose={closeDetail}
+                    onChanged={requests.reload}
+                />
+            )}
+            {dialog.isOpen && <RequestDialog onClose={dialog.close} onSaved={handleSaved} />}
         </>
     )
 }

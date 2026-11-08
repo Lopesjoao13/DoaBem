@@ -1,14 +1,5 @@
-import { IconAlertTriangle, IconCircleCheck, IconInfoCircle } from '@tabler/icons-react'
-import { TONES } from '@/constants/tones.js'
+import { TONES, TONE_ICONS } from '@/constants/tones.js'
 import { Content, StyledCallout, Title } from './Callout.styles.js'
-
-const TONE_ICONS = {
-    [TONES.SUCCESS]: IconCircleCheck,
-    [TONES.WARNING]: IconAlertTriangle,
-    [TONES.CRITICAL]: IconAlertTriangle,
-    [TONES.INFO]: IconInfoCircle,
-    [TONES.NEUTRAL]: IconInfoCircle,
-}
 
 export const Callout = ({ tone = TONES.INFO, title, children }) => {
     const Icon = TONE_ICONS[tone]

@@ -9,8 +9,8 @@ export const StyledTopBar = styled.header`
     justify-content: space-between;
     height: var(--topbar-height);
     padding: 0 24px;
-    background: var(--color-sidebar);
-    color: var(--color-sidebar-text);
+    background: var(--teal-900);
+    color: var(--teal-100);
 `
 
 export const Brand = styled.div`
@@ -21,6 +21,6 @@ export const Brand = styled.div`
 
 export const Tagline = styled.span`
     padding-left: 16px;
-    border-left: 1px solid var(--color-divider);
+    border-left: 1px solid var(--white-alpha-15);
     font-size: 14px;
 `

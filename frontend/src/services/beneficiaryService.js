@@ -6,7 +6,7 @@ import {
     mockListBeneficiaries,
     mockSetBeneficiaryStatus,
     mockUpdateBeneficiary,
-} from './mock/mockBeneficiaries.js'
+} from '@/services/mock/mockBeneficiaries.js'
 
 const api = {
     listBeneficiaries: (filters) =>

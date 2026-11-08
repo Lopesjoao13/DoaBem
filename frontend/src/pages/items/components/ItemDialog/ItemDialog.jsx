@@ -3,21 +3,14 @@ import { Button } from '@/components/Button/Button.jsx'
 import { Callout } from '@/components/Callout/Callout.jsx'
 import { Dialog } from '@/components/Dialog/Dialog.jsx'
 import { Field } from '@/components/Field/Field.jsx'
-import { FormField } from '@/components/FormField/FormField.jsx'
 import { FormRow, FormStack } from '@/components/FormLayout/FormLayout.jsx'
 import { Select } from '@/components/Select/Select.jsx'
+import { Input } from '@/components/Input/Input.jsx'
 import { TONES } from '@/constants/tones.js'
-import { UNIT_LABELS, UNITS } from '@/constants/units.js'
-import { useItemForm } from '@/hooks/useItemForm.js'
-
-const UNIT_OPTIONS = [
-    { value: UNITS.UNIT, label: 'Unidade (un) — só inteiros' },
-    { value: UNITS.KG, label: 'Quilograma (kg) — até 3 casas' },
-    { value: UNITS.L, label: 'Litro (L) — até 3 casas' },
-]
-
-const SELECT_CATEGORY = { value: '', label: 'Selecione a categoria' }
-const SELECT_UNIT = { value: '', label: 'Selecione a unidade' }
+import { UNIT_LABELS } from '@/constants/units.js'
+import { useItemForm } from '@/pages/items/hooks/useItemForm.js'
+import { getDescribedBy } from '@/utils/a11y.js'
+import { UNIT_OPTIONS, SELECT_CATEGORY, SELECT_UNIT } from '@/pages/items/constants/itemOptions.js'
 
 export const ItemDialog = ({ item, categories, onClose, onSaved }) => {
     const formId = useId()
@@ -34,7 +27,7 @@ export const ItemDialog = ({ item, categories, onClose, onSaved }) => {
             onClose={onClose}
             footer={
                 <>
-                    <Button variant="outline" onClick={onClose}>
+                    <Button variant="outline" family="deny" onClick={onClose}>
                         Cancelar
                     </Button>
                     <Button type="submit" form={formId} disabled={form.isSubmitting}>
@@ -45,15 +38,17 @@ export const ItemDialog = ({ item, categories, onClose, onSaved }) => {
         >
             <FormStack id={formId} onSubmit={form.submit} noValidate>
                 {form.formError && <Callout tone={TONES.CRITICAL}>{form.formError}</Callout>}
-                <FormField
-                    label="Nome"
-                    id={`${formId}-name`}
-                    name="name"
-                    value={values.name}
-                    onChange={form.handleChange}
-                    error={errors.name}
-                    autoFocus
-                />
+                <Field label="Nome" htmlFor={`${formId}-name`} error={errors.name}>
+                    <Input
+                        id={`${formId}-name`}
+                        error={errors.name}
+                        aria-describedby={getDescribedBy(`${formId}-name`, { error: errors.name })}
+                        name="name"
+                        value={values.name}
+                        onChange={form.handleChange}
+                        autoFocus
+                    />
+                </Field>
                 <Field label="Categoria" htmlFor={`${formId}-category`} error={errors.categoryId}>
                     <Select
                         id={`${formId}-category`}
@@ -87,16 +82,25 @@ export const ItemDialog = ({ item, categories, onClose, onSaved }) => {
                             disabled={Boolean(item)}
                         />
                     </Field>
-                    <FormField
+                    <Field
                         label={`Estoque mínimo${values.unitOfMeasure ? ` (${UNIT_LABELS[values.unitOfMeasure]})` : ''}`}
-                        id={`${formId}-min`}
-                        name="minStock"
-                        inputMode="decimal"
-                        value={values.minStock}
-                        onChange={form.handleChange}
-                        error={errors.minStock}
+                        htmlFor={`${formId}-min`}
                         hint="Crítico quando o disponível for igual ou menor."
-                    />
+                        error={errors.minStock}
+                    >
+                        <Input
+                            id={`${formId}-min`}
+                            error={errors.minStock}
+                            aria-describedby={getDescribedBy(`${formId}-min`, {
+                                error: errors.minStock,
+                                hint: 'Crítico quando o disponível for igual ou menor.',
+                            })}
+                            name="minStock"
+                            inputMode="decimal"
+                            value={values.minStock}
+                            onChange={form.handleChange}
+                        />
+                    </Field>
                 </FormRow>
             </FormStack>
         </Dialog>

@@ -12,6 +12,6 @@ export const Box = styled.input`
     width: 16px;
     height: 16px;
     margin: 0;
-    accent-color: var(--color-primary);
+    accent-color: var(--teal-500);
     cursor: pointer;
 `

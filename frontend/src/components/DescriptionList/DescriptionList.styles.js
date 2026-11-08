@@ -12,7 +12,7 @@ export const Term = styled.dt`
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    color: var(--color-fg-muted);
 `
 
 export const Detail = styled.dd`

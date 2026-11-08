@@ -2,35 +2,43 @@ import styled, { css } from 'styled-components'
 
 export const fieldControlStyles = css`
     width: 100%;
-    padding: 10px 16px;
+    height: var(--input-height);
+    padding: 0 16px;
     border: 1px solid
-        ${({ $hasError }) => ($hasError ? 'var(--color-critical)' : 'var(--color-border)')};
+        ${({ $hasError }) => ($hasError ? 'var(--red-500)' : 'var(--color-border-strong)')};
     border-radius: var(--radius);
     background: var(--color-surface);
-    color: var(--color-text);
+    color: var(--color-fg);
     font: inherit;
     font-size: 14px;
+    letter-spacing: var(--tracking-base);
+    transition: border-color var(--duration-fast) var(--ease-out);
 
     &::placeholder {
-        color: var(--color-text-muted);
+        color: var(--gray-400);
+    }
+
+    &:hover:not(:disabled, :read-only, :focus) {
+        border-color: ${({ $hasError }) => ($hasError ? 'var(--red-500)' : 'var(--gray-600)')};
     }
 
     &:focus {
         outline: none;
-        border-color: ${({ $hasError }) =>
-            $hasError ? 'var(--color-critical)' : 'var(--color-primary)'};
+        border-color: ${({ $hasError }) => ($hasError ? 'var(--red-500)' : 'var(--color-fg)')};
     }
 
     &:disabled {
-        background: var(--color-bg);
-        color: var(--color-text-muted);
+        border-color: var(--gray-200);
+        color: var(--gray-600);
+        cursor: not-allowed;
     }
 `
 
 export const readOnlyStyles = css`
     &:read-only {
-        background: var(--color-bg);
-        color: var(--color-text-muted);
+        border-color: var(--gray-200);
+        background: var(--gray-100);
+        color: var(--gray-900);
     }
 `
 
