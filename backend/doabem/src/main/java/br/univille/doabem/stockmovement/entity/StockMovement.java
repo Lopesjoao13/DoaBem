@@ -1,5 +1,7 @@
 package br.univille.doabem.stockmovement.entity;
 
+import br.univille.doabem.aidrequest.entity.AidRequestItem;
+import br.univille.doabem.delivery.entity.DeliveryItem;
 import br.univille.doabem.donationentry.entity.DonationEntryItem;
 import br.univille.doabem.item.entity.Item;
 import br.univille.doabem.user.entity.AppUser;
@@ -55,6 +57,14 @@ public class StockMovement {
     @Enumerated(EnumType.STRING)
     @Column(name = "adjustment_reason", length = 10)
     private AdjustmentReason adjustmentReason;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "aid_request_item_id")
+    private AidRequestItem aidRequestItem;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "delivery_item_id")
+    private DeliveryItem deliveryItem;
 
     @Column(length = 300)
     private String reason;
