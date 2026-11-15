@@ -3,12 +3,15 @@ package br.univille.doabem.common.error;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -26,7 +29,22 @@ public class GlobalExceptionHandler {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getDefaultMessage())
                 .collect(Collectors.joining(" "));
-        return ResponseEntity.badRequest().body(new ErrorResponse(400, message));
+        Map<String, String> fieldErrors = new LinkedHashMap<>();
+        ex.getBindingResult().getFieldErrors()
+                .forEach(error -> fieldErrors.putIfAbsent(error.getField(), error.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(new ErrorResponse(400, message, fieldErrors));
+    }
+
+    // Validação que depende do estado (ex.: justificativa obrigatória em aprovação parcial), com o campo apontado.
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> handleFieldValidation(ValidationException ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(400, ex.getMessage(), ex.getFieldErrors()));
+    }
+
+    // Ex.: JSON malformado ou valor de enum inexistente (decision, type).
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleUnreadable(HttpMessageNotReadableException ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(400, "Corpo da requisição inválido."));
     }
 
     // Ex.: ?sort=campoQueNaoExiste

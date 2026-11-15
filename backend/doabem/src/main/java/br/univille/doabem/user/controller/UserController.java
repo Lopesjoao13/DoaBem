@@ -3,6 +3,7 @@ package br.univille.doabem.user.controller;
 import br.univille.doabem.user.dto.CreateUserRequest;
 import br.univille.doabem.user.dto.UpdateUserRequest;
 import br.univille.doabem.user.dto.UpdateUserStatusRequest;
+import br.univille.doabem.user.dto.UserOptionResponse;
 import br.univille.doabem.user.dto.UserResponse;
 import br.univille.doabem.user.service.UserService;
 import jakarta.validation.Valid;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 // RF05: gestão de usuários exclusiva do Coordenador (o Operador recebe 403).
 @RestController
 @RequestMapping("/api/users")
@@ -39,6 +42,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse create(@Valid @RequestBody CreateUserRequest request) {
         return userService.create(request);
+    }
+
+    // Exceção à regra da classe: qualquer perfil interno precisa dos nomes para filtrar históricos.
+    // Expõe só id e nome; a listagem completa (/api/users) segue restrita ao Coordenador.
+    @GetMapping("/options")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'COORDINATOR')")
+    public List<UserOptionResponse> options() {
+        return userService.options();
     }
 
     @GetMapping

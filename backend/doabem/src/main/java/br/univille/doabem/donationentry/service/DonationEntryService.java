@@ -22,6 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class DonationEntryService {
 
@@ -83,7 +88,24 @@ public class DonationEntryService {
 
     @Transactional(readOnly = true)
     public Page<DonationEntrySummaryResponse> list(Pageable pageable) {
-        return entryRepository.findAll(pageable).map(DonationEntrySummaryResponse::from);
+        Page<DonationEntry> page = entryRepository.findAll(pageable);
+        Map<Long, List<DonationEntrySummaryResponse.ReceivedItem>> received = receivedItems(page.getContent());
+        return page.map(entry -> DonationEntrySummaryResponse.from(entry, received.getOrDefault(entry.getId(), List.of())));
+    }
+
+    // Um item por entrada, mesmo que apareça em mais de uma linha. Uma consulta para a página toda (RNF10).
+    private Map<Long, List<DonationEntrySummaryResponse.ReceivedItem>> receivedItems(List<DonationEntry> entries) {
+        if (entries.isEmpty()) {
+            return Map.of();
+        }
+        Map<Long, Map<Long, DonationEntrySummaryResponse.ReceivedItem>> byEntry = new HashMap<>();
+        for (Object[] row : entryRepository.findReceivedItems(entries.stream().map(DonationEntry::getId).toList())) {
+            byEntry.computeIfAbsent((Long) row[0], id -> new LinkedHashMap<>())
+                    .putIfAbsent((Long) row[1], new DonationEntrySummaryResponse.ReceivedItem((Long) row[1], (String) row[2]));
+        }
+        Map<Long, List<DonationEntrySummaryResponse.ReceivedItem>> result = new HashMap<>();
+        byEntry.forEach((entryId, items) -> result.put(entryId, List.copyOf(items.values())));
+        return result;
     }
 
     @Transactional(readOnly = true)

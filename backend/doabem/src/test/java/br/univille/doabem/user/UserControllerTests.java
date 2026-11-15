@@ -202,4 +202,38 @@ class UserControllerTests {
                         .content(json(Map.of("active", false))))
                 .andExpect(status().isUnprocessableEntity());
     }
+
+    // /api/users é só do Coordenador, mas o filtro de movimentações precisa dos nomes: /options expõe só id e nome.
+    @Test
+    void opcoesDeUsuarioSaoAcessiveisAoOperadorEExpoemApenasIdENome() throws Exception {
+        mockMvc.perform(get("/api/users").header("Authorization", "Bearer " + operatorToken))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(get("/api/users/options").header("Authorization", "Bearer " + operatorToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].name").value("Coord"))
+                .andExpect(jsonPath("$[1].name").value("Oper"))
+                .andExpect(jsonPath("$[0].id").value(coordinatorId))
+                .andExpect(jsonPath("$[0].email").doesNotExist())
+                .andExpect(jsonPath("$[0].role").doesNotExist())
+                .andExpect(jsonPath("$[0].passwordHash").doesNotExist());
+
+        mockMvc.perform(get("/api/users/options").header("Authorization", "Bearer " + coordinatorToken))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/users/options")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void opcoesDeUsuarioIncluemInativosPoisContinuamNosHistoricos() throws Exception {
+        save("Antigo", "antigo@test.local", Role.OPERATOR);
+        AppUser inactive = repository.findByEmail("antigo@test.local").orElseThrow();
+        inactive.setActive(false);
+        repository.save(inactive);
+
+        mockMvc.perform(get("/api/users/options").header("Authorization", "Bearer " + operatorToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$[0].name").value("Antigo"));
+    }
 }

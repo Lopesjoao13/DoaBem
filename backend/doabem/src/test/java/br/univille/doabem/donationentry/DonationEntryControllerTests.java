@@ -177,4 +177,40 @@ class DonationEntryControllerTests extends ApiTestSupport {
 
         doGet("/api/donation-entries/999999", operatorToken).andExpect(status().isNotFound());
     }
+
+    // A tela de Entradas filtra por item: a listagem informa os itens recebidos, sem abrir cada entrada.
+    @Test
+    void listagemInformaOsItensRecebidosDeCadaEntradaSemRepeticao() throws Exception {
+        long primeira = idOf(doPost("/api/donation-entries", operatorToken, entry(line(arroz, 10))));
+        long segunda = idOf(doPost("/api/donation-entries", operatorToken,
+                entry(line(arroz, 5), line(sabonete, 3), line(arroz, 1))));
+
+        doGet("/api/donation-entries", operatorToken)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[?(@.id==" + primeira + ")].receivedItems.length()").value(1))
+                .andExpect(jsonPath("$.content[?(@.id==" + primeira + ")].receivedItems[0].itemId").value((int) (long) arroz.getId()))
+                .andExpect(jsonPath("$.content[?(@.id==" + primeira + ")].receivedItems[0].itemName").value("Arroz"))
+                .andExpect(jsonPath("$.content[?(@.id==" + segunda + ")].receivedItems.length()").value(2))
+                .andExpect(jsonPath("$.content[?(@.id==" + segunda + ")].receivedItems[1].itemName").value("Sabonete"));
+    }
+
+    @Test
+    void listagemVaziaNaoQuebraOsItensRecebidos() throws Exception {
+        doGet("/api/donation-entries", operatorToken)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(0));
+    }
+
+    @Test
+    void errosDeValidacaoInformamOCampoEmFieldErrors() throws Exception {
+        doPost("/api/donation-entries", operatorToken, entry(line(arroz, 0)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("A quantidade deve ser maior que zero."))
+                .andExpect(jsonPath("$.fieldErrors['items[0].quantity']").value("A quantidade deve ser maior que zero."));
+        // Erros que não são de campo não carregam fieldErrors.
+        doGet("/api/donation-entries/999999", operatorToken)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.fieldErrors").doesNotExist());
+    }
 }

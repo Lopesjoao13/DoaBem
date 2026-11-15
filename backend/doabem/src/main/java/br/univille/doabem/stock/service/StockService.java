@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -56,6 +57,15 @@ public class StockService {
     @Transactional(readOnly = true)
     public StockBalance balanceOf(Long itemId) {
         return toBalances(movementRepository.totalsForItem(itemId)).getOrDefault(itemId, StockBalance.ZERO);
+    }
+
+    // Saldos de vários itens de uma vez (sem N consultas). Item sem movimentação fica fora do mapa.
+    @Transactional(readOnly = true)
+    public Map<Long, StockBalance> balancesOf(Collection<Long> itemIds) {
+        if (itemIds.isEmpty()) {
+            return Map.of();
+        }
+        return toBalances(movementRepository.totalsForItems(itemIds));
     }
 
     // Trava a linha do item até o fim da transação. Todo código que confere o disponível
@@ -113,7 +123,8 @@ public class StockService {
         return balances;
     }
 
-    private String format(BigDecimal quantity, UnitOfMeasure unit) {
+    // Texto de quantidade para mensagens ("12 kg"): unidade sempre junto do número (RNF01).
+    public String format(BigDecimal quantity, UnitOfMeasure unit) {
         String label = unit == UnitOfMeasure.UNIT ? "un" : unit.name().toLowerCase(Locale.ROOT);
         return quantity.stripTrailingZeros().toPlainString() + " " + label;
     }
