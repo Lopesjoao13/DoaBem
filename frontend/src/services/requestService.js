@@ -1,3 +1,5 @@
+import { USE_MOCK } from '@/constants/api.js'
+import { httpClient } from './httpClient.js'
 import { mockOnly } from './mockOnly.js'
 import { mockGetDeliverySummary, mockGetFamilyHistory } from '@/services/mock/mockDeliveries.js'
 import {
@@ -24,6 +26,15 @@ export const deliverRequest = mockOnly((id, delivery) => mockDeliverRequest(id, 
 
 export const cancelRequest = mockOnly((id, cancellation) => mockCancelRequest(id, cancellation))
 
-export const getDeliverySummary = mockOnly((beneficiaryId) => mockGetDeliverySummary(beneficiaryId))
+const beneficiaryApi = {
+    getDeliverySummary: (beneficiaryId) =>
+        httpClient.get(`/beneficiaries/${beneficiaryId}/delivery-summary`),
+    getFamilyHistory: (beneficiaryId) => httpClient.get(`/beneficiaries/${beneficiaryId}/requests`),
+}
 
-export const getFamilyHistory = mockOnly((beneficiaryId) => mockGetFamilyHistory(beneficiaryId))
+const beneficiaryMock = {
+    getDeliverySummary: mockGetDeliverySummary,
+    getFamilyHistory: mockGetFamilyHistory,
+}
+
+export const { getDeliverySummary, getFamilyHistory } = USE_MOCK ? beneficiaryMock : beneficiaryApi

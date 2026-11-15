@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { ALL_FILTER } from '@/constants/stockFilters.js'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useFilterParams } from '@/hooks/useFilterParams.js'
 import { listEntries } from '@/services/entryService.js'
@@ -22,13 +23,13 @@ const matchesRegisteredBy = (entry, registeredBy) =>
     registeredBy === ALL_FILTER || entry.registeredBy === registeredBy
 
 const matchesItem = (entry, itemId) =>
-    itemId === ALL_FILTER || entry.receivedItems.some((item) => item.itemId === itemId)
+    itemId === ALL_FILTER || (entry.receivedItems ?? []).some((item) => item.itemId === itemId)
 
 const listReceivedItems = (entries) =>
     [
         ...new Map(
             entries.flatMap((entry) =>
-                entry.receivedItems.map((item) => [item.itemId, item.itemName]),
+                (entry.receivedItems ?? []).map((item) => [item.itemId, item.itemName]),
             ),
         ),
     ]
@@ -41,7 +42,7 @@ const listRegisteredBy = (entries) =>
         .map((name) => ({ value: name, label: name }))
 
 export const useEntries = () => {
-    const { data, error, isLoading, reload } = useFetch(listEntries)
+    const { data, error, isLoading, reload } = useFetch(QUERY_KEYS.ENTRIES, listEntries)
     const { filters, setFilters, clearFilters, isFiltered } = useFilterParams(
         ENTRIES_DEFAULT_FILTERS,
         ENTRIES_FILTER_VALIDATORS,

@@ -1,6 +1,6 @@
-import { useCallback } from 'react'
 import { PERMISSIONS } from '@/constants/permissions.js'
 import { REQUEST_STATUS } from '@/constants/requestStatus.js'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { usePermission } from '@/hooks/usePermission.js'
 import { getRequest } from '@/services/requestService.js'
@@ -20,8 +20,7 @@ const resolveActions = (request, { canDecide, canCancelOpen, canCancelPicked }) 
 }
 
 export const useRequestDetail = (id) => {
-    const loadRequest = useCallback(() => getRequest(id), [id])
-    const { data, error, reload } = useFetch(loadRequest)
+    const { data, error, reload } = useFetch([QUERY_KEYS.REQUESTS, id], () => getRequest(id))
     const permissions = {
         canDecide: usePermission(PERMISSIONS.DECIDE_REQUEST),
         canCancelOpen: usePermission(PERMISSIONS.CANCEL_OPEN_REQUEST),

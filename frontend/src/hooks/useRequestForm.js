@@ -1,7 +1,8 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { REQUEST_MESSAGES } from '@/constants/requestMessages.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useItemOptions } from '@/hooks/useItemOptions.js'
@@ -36,19 +37,18 @@ const buildValidator = (itemsById) => (values) => {
 }
 
 const useDeliverySummary = (beneficiaryId) => {
-    const loadSummary = useCallback(
-        () => (beneficiaryId ? getDeliverySummary(beneficiaryId) : Promise.resolve(null)),
-        [beneficiaryId],
+    return useFetch([QUERY_KEYS.DELIVERY_SUMMARY, beneficiaryId], () =>
+        beneficiaryId ? getDeliverySummary(beneficiaryId) : null,
     )
-    return useFetch(loadSummary)
 }
 
 export const useRequestForm = ({ familyId = '', onSaved }) => {
     const toast = useToast()
     const itemOptions = useItemOptions({ withStock: true })
 
-    const loadFamilies = useCallback(() => listBeneficiaries({ status: RECORD_STATUS.ACTIVE }), [])
-    const families = useFetch(loadFamilies)
+    const families = useFetch([QUERY_KEYS.BENEFICIARIES, { status: RECORD_STATUS.ACTIVE }], () =>
+        listBeneficiaries({ status: RECORD_STATUS.ACTIVE }),
+    )
     const familyOptions = useMemo(
         () =>
             (families.data?.content ?? EMPTY_ROWS).map((family) => ({

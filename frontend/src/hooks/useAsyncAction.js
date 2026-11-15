@@ -1,28 +1,22 @@
-import { useCallback, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { API_MESSAGES } from '@/constants/apiMessages.js'
 import { useToast } from '@/hooks/useToast.js'
 
 export const useAsyncAction = () => {
     const toast = useToast()
-    const [isRunning, setIsRunning] = useState(false)
+    const mutation = useMutation({ mutationFn: (action) => action() })
 
-    const run = useCallback(
-        async (action, successMessage) => {
-            setIsRunning(true)
-            try {
-                const result = await action()
-                if (successMessage) toast.success(successMessage)
-                return result ?? true
-            } catch (error) {
-                console.error('Falha na ação:', error.message)
-                toast.error(error.message || API_MESSAGES.unexpected)
-                return null
-            } finally {
-                setIsRunning(false)
-            }
-        },
-        [toast],
-    )
+    const run = async (action, successMessage) => {
+        try {
+            const result = await mutation.mutateAsync(action)
+            if (successMessage) toast.success(successMessage)
+            return result ?? true
+        } catch (error) {
+            console.error('Falha na ação:', error.message)
+            toast.error(error.message || API_MESSAGES.unexpected)
+            return null
+        }
+    }
 
-    return { isRunning, run }
+    return { isRunning: mutation.isPending, run }
 }

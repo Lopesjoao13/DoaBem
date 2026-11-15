@@ -1,38 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { API_MESSAGES } from '@/constants/apiMessages.js'
 
-export const useFetch = (loader) => {
-    const [data, setData] = useState(null)
-    const [error, setError] = useState('')
-    const [isLoading, setIsLoading] = useState(true)
-    const [attempt, setAttempt] = useState(0)
+export const useFetch = (queryKey, loader) => {
+    const query = useQuery({
+        queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
+        queryFn: loader,
+        placeholderData: keepPreviousData,
+    })
 
-    useEffect(() => {
-        let isCurrent = true
-
-        const load = async () => {
-            setIsLoading(true)
-            setError('')
-            try {
-                const result = await loader()
-                if (isCurrent) setData(result)
-            } catch (loadError) {
-                console.error('Falha ao carregar dados:', loadError.message)
-                if (isCurrent) setError(loadError.message || API_MESSAGES.unexpected)
-            } finally {
-                if (isCurrent) setIsLoading(false)
-            }
-        }
-
-        load()
-        return () => {
-            isCurrent = false
-        }
-    }, [loader, attempt])
-
-    const reload = useCallback(() => {
-        setAttempt((current) => current + 1)
-    }, [])
-
-    return { data, error, isLoading, reload }
+    return {
+        data: query.data ?? null,
+        error: query.error ? query.error.message || API_MESSAGES.unexpected : '',
+        isLoading: query.isFetching,
+        reload: query.refetch,
+    }
 }

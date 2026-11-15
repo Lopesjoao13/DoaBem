@@ -1,6 +1,15 @@
-import { mockOnly } from './mockOnly.js'
+import { USE_MOCK } from '@/constants/api.js'
+import { httpClient } from './httpClient.js'
 import { mockCreateAdjustment, mockGetStock } from '@/services/mock/mockStock.js'
 
-export const getStock = mockOnly((filters) => mockGetStock(filters))
+const api = {
+    getStock: (filters) => httpClient.get('/stock', filters),
+    createAdjustment: (payload) => httpClient.post('/stock/adjustments', payload),
+}
 
-export const createAdjustment = mockOnly((payload) => mockCreateAdjustment(payload))
+const mock = {
+    getStock: (filters) => mockGetStock(filters),
+    createAdjustment: (payload) => mockCreateAdjustment(payload),
+}
+
+export const { getStock, createAdjustment } = USE_MOCK ? mock : api

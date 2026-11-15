@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useFilterParams } from '@/hooks/useFilterParams.js'
 import { ALL_FILTER } from '@/constants/stockFilters.js'
@@ -14,7 +15,7 @@ const matchesStatus = (user, status) =>
     status === ALL_FILTER || (status === 'ACTIVE' ? user.active : !user.active)
 
 export const useUsers = () => {
-    const { data, error, isLoading, reload } = useFetch(listUsers)
+    const { data, error, isLoading, reload } = useFetch(QUERY_KEYS.USERS, listUsers)
     const { filters, setFilters, clearFilters, isFiltered } = useFilterParams(
         USERS_DEFAULT_FILTERS,
         USERS_FILTER_VALIDATORS,

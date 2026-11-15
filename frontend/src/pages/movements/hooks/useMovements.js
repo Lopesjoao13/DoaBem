@@ -1,6 +1,7 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { LIST_ALL_PARAMS } from '@/constants/api.js'
 import { useDetailParam } from '@/hooks/useDetailParam.js'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useFilterParams } from '@/hooks/useFilterParams.js'
 import { listItems } from '@/services/catalogService.js'
@@ -25,10 +26,11 @@ export const useMovements = () => {
     const detail = useDetailParam('movementId')
     const [page, setPage] = useState(0)
 
-    const loadMovements = useCallback(() => listMovements({ ...filters, page }), [filters, page])
-    const movements = useFetch(loadMovements)
-    const items = useFetch(listItems)
-    const users = useFetch(listUserOptions)
+    const movements = useFetch([QUERY_KEYS.MOVEMENTS, filters, page], () =>
+        listMovements({ ...filters, page }),
+    )
+    const items = useFetch(QUERY_KEYS.ITEMS, () => listItems())
+    const users = useFetch(QUERY_KEYS.USER_OPTIONS, listUserOptions)
 
     const itemOptions = useMemo(
         () => toOptions(items.data?.content ?? EMPTY_ROWS, (item) => item.name),

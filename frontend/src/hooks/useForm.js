@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { API_MESSAGES } from '@/constants/apiMessages.js'
 import { hasErrors } from '@/utils/validation.js'
 
@@ -9,7 +10,7 @@ export const useForm = ({ initialValues, validate, onSubmit }) => {
     const [values, setValues] = useState(initialValues)
     const [errors, setErrors] = useState({})
     const [formError, setFormError] = useState('')
-    const [isSubmitting, setIsSubmitting] = useState(false)
+    const mutation = useMutation({ mutationFn: onSubmit })
 
     const changeField = useCallback((name, valueOrUpdater) => {
         setValues((current) => ({
@@ -41,17 +42,14 @@ export const useForm = ({ initialValues, validate, onSubmit }) => {
         event?.preventDefault()
         if (!validateNow()) return false
 
-        setIsSubmitting(true)
         try {
-            await onSubmit(values)
+            await mutation.mutateAsync(values)
             return true
         } catch (error) {
             console.error('Falha ao enviar o formulário:', error.message)
             setFormError(error.message || API_MESSAGES.unexpected)
             if (error.fieldErrors) setErrors(error.fieldErrors)
             return false
-        } finally {
-            setIsSubmitting(false)
         }
     }
 
@@ -59,7 +57,7 @@ export const useForm = ({ initialValues, validate, onSubmit }) => {
         values,
         errors,
         formError,
-        isSubmitting,
+        isSubmitting: mutation.isPending,
         handleChange,
         changeField,
         reset,

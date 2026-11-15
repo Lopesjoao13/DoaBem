@@ -1,5 +1,6 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { ALL_FILTER, ALL_LEVELS } from '@/constants/stockFilters.js'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useFilterParams } from '@/hooks/useFilterParams.js'
 import { getStock } from '@/services/stockService.js'
@@ -33,8 +34,9 @@ export const useStock = () => {
         [filters.levels],
     )
 
-    const loadStock = useCallback(() => getStock({ status }), [status])
-    const { data, error, isLoading, reload } = useFetch(loadStock)
+    const { data, error, isLoading, reload } = useFetch([QUERY_KEYS.STOCK, { status }], () =>
+        getStock({ status }),
+    )
     const rows = data ?? EMPTY_ROWS
 
     const searchedRows = useMemo(

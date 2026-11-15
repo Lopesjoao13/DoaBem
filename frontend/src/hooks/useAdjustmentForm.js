@@ -1,7 +1,8 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { STOCK_MESSAGES } from '@/constants/stockMessages.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useToast } from '@/hooks/useToast.js'
@@ -27,8 +28,9 @@ const validate = (values, item) => {
 
 export const useAdjustmentForm = ({ initialItemId, onSaved }) => {
     const toast = useToast()
-    const loadItems = useCallback(() => getStock({ status: RECORD_STATUS.ACTIVE }), [])
-    const { data, isLoading } = useFetch(loadItems)
+    const { data, isLoading } = useFetch([QUERY_KEYS.STOCK, { status: RECORD_STATUS.ACTIVE }], () =>
+        getStock({ status: RECORD_STATUS.ACTIVE }),
+    )
     const items = data ?? EMPTY_ROWS
 
     const form = useForm({

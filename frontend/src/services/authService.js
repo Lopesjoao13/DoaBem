@@ -13,6 +13,8 @@ const toSession = (response, email) => ({
 const requestLogin = (credentials) =>
     USE_MOCK ? mockLogin(credentials) : httpClient.post('/auth/login', credentials)
 
+export const getCurrentUser = () => (USE_MOCK ? Promise.resolve(null) : httpClient.get('/auth/me'))
+
 export const login = async (email, password) => {
     const normalizedEmail = email.trim().toLowerCase()
     const response = await requestLogin({ email: normalizedEmail, password })

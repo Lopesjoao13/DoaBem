@@ -1,6 +1,7 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { ALL_REQUESTS_TAB } from '@/constants/requestStatus.js'
 import { ALL_FILTER } from '@/constants/stockFilters.js'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useFilterParams } from '@/hooks/useFilterParams.js'
 import { listRequests } from '@/services/requestService.js'
@@ -34,11 +35,9 @@ export const useRequests = () => {
     )
     const { tab } = filters
 
-    const loadRequests = useCallback(
-        () => listRequests({ status: tab === ALL_REQUESTS_TAB ? undefined : tab }),
-        [tab],
+    const { data, error, isLoading, reload } = useFetch([QUERY_KEYS.REQUESTS, { tab }], () =>
+        listRequests({ status: tab === ALL_REQUESTS_TAB ? undefined : tab }),
     )
-    const { data, error, isLoading, reload } = useFetch(loadRequests)
     const requests = data?.content ?? EMPTY_ROWS
 
     const visibleRequests = useMemo(

@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { listItems } from '@/services/catalogService.js'
 import { getStock } from '@/services/stockService.js'
@@ -13,7 +14,12 @@ const loadCatalogItems = async () => {
 const loadStockItems = () => getStock({ status: RECORD_STATUS.ACTIVE })
 
 export const useItemOptions = ({ withStock = false } = {}) => {
-    const { data, isLoading, error } = useFetch(withStock ? loadStockItems : loadCatalogItems)
+    const { data, isLoading, error } = useFetch(
+        withStock
+            ? [QUERY_KEYS.STOCK, { status: RECORD_STATUS.ACTIVE }]
+            : [QUERY_KEYS.ITEMS, { status: RECORD_STATUS.ACTIVE, options: true }],
+        withStock ? loadStockItems : loadCatalogItems,
+    )
     const items = data ?? EMPTY_ROWS
 
     const itemsById = useMemo(

@@ -48,9 +48,21 @@ client.interceptors.response.use(
     },
 )
 
+const isSpringPage = (data) =>
+    Array.isArray(data?.content) && data.page !== null && typeof data.page === 'object'
+
+const flattenPage = ({ content, page, ...rest }) => ({
+    ...rest,
+    content,
+    page: page.number,
+    size: page.size,
+    totalElements: page.totalElements,
+    totalPages: page.totalPages,
+})
+
 const request = async (config) => {
     const response = await client.request(config)
-    return response.data
+    return isSpringPage(response.data) ? flattenPage(response.data) : response.data
 }
 
 export const httpClient = {
