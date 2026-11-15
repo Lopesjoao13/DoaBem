@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import br.univille.doabem.beneficiary.dto.DeliverySummaryResponse;
+import br.univille.doabem.beneficiary.dto.FamilyHistoryResponse;
+import br.univille.doabem.beneficiary.service.BeneficiaryHistoryService;
 
 // RF22 a RF24 e RN08: dados de famílias acessíveis apenas a perfis internos (Operador e Coordenador).
 @RestController
@@ -29,9 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class BeneficiaryController {
 
     private final BeneficiaryService service;
-
-    public BeneficiaryController(BeneficiaryService service) {
+    private final BeneficiaryHistoryService historyService;
+    public BeneficiaryController(BeneficiaryService service, BeneficiaryHistoryService historyService) {
         this.service = service;
+        this.historyService = historyService;
     }
 
     @PostMapping
@@ -61,5 +65,15 @@ public class BeneficiaryController {
     public BeneficiaryResponse setStatus(@PathVariable Long id,
                                          @Valid @RequestBody UpdateBeneficiaryStatusRequest request) {
         return service.setStatus(id, request.status());
+    }
+
+    @GetMapping("/{id}/delivery-summary")
+    public DeliverySummaryResponse deliverySummary(@PathVariable Long id) {
+        return historyService.deliverySummary(id);
+    }
+
+    @GetMapping("/{id}/requests")
+    public FamilyHistoryResponse history(@PathVariable Long id) {
+        return historyService.history(id);
     }
 }

@@ -11,18 +11,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import br.univille.doabem.aidrequest.entity.AidRequestStatus;
+import br.univille.doabem.aidrequest.repository.AidRequestRepository;
+import br.univille.doabem.common.error.BusinessRuleException;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 @Service
 public class BeneficiaryService {
 
+    private static final List<AidRequestStatus> OPEN_STATUSES = Arrays.stream(AidRequestStatus.values())
+            .filter(AidRequestStatus::isOpen)
+            .toList();
+
     private final BeneficiaryRepository repository;
+    private final AidRequestRepository requests;
 
-    public BeneficiaryService(BeneficiaryRepository repository) {
+    public BeneficiaryService(BeneficiaryRepository repository, AidRequestRepository requests) {
         this.repository = repository;
+        this.requests = requests;
     }
-
     @Transactional
     public BeneficiaryResponse create(BeneficiaryRequest request) {
         Beneficiary beneficiary = new Beneficiary();
@@ -60,6 +70,11 @@ public class BeneficiaryService {
     @Transactional
     public BeneficiaryResponse setStatus(Long id, Status status) {
         Beneficiary beneficiary = find(id);
+        // D-09: não inativa família com solicitação em andamento (pendente, aprovada ou separada).
+        if (status == Status.INACTIVE && requests.existsByBeneficiaryIdAndStatusIn(id, OPEN_STATUSES)) {
+            throw new BusinessRuleException(
+                    "A família tem solicitação em andamento. Conclua ou cancele antes de inativar.");
+        }
         beneficiary.setStatus(status);
         return BeneficiaryResponse.from(beneficiary);
     }
