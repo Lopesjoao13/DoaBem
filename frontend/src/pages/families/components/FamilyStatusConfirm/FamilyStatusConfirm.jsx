@@ -1,11 +1,12 @@
 import { ConfirmDialog } from '@/components/ConfirmDialog/ConfirmDialog.jsx'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { FAMILY_MESSAGES } from '@/pages/families/constants/familyMessages.js'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { useAsyncAction } from '@/hooks/useAsyncAction.js'
 import { setBeneficiaryStatus } from '@/services/beneficiaryService.js'
 
 export const FamilyStatusConfirm = ({ family, onClose, onChanged }) => {
-    const { isRunning, run } = useAsyncAction()
+    const { isRunning, run } = useAsyncAction({ invalidates: INVALIDATES.FAMILIES })
     const isActive = family.status === RECORD_STATUS.ACTIVE
 
     const handleConfirm = async () => {

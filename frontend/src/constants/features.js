@@ -1,8 +1,6 @@
-import { USE_MOCK } from './api.js'
-
 export const FEATURES = {
-    DASHBOARD: USE_MOCK,
+    DASHBOARD: true,
     STOCK: true,
-    REQUESTS: USE_MOCK,
-    MOVEMENTS: USE_MOCK,
+    REQUESTS: true,
+    MOVEMENTS: true,
 }

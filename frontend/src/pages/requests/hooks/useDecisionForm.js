@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { REQUEST_DECISIONS } from '@/constants/requestActions.js'
 import { REQUEST_MESSAGES } from '@/constants/requestMessages.js'
 import { REQUEST_STATUS } from '@/constants/requestStatus.js'
@@ -39,6 +40,7 @@ export const useDecisionForm = ({ request, onDone }) => {
     const decisionRef = useRef(REQUEST_DECISIONS.APPROVE)
 
     const form = useForm({
+        invalidates: INVALIDATES.REQUEST_CHANGE,
         initialValues: {
             approved: Object.fromEntries(
                 request.items.map((requestItem) => [
@@ -58,7 +60,7 @@ export const useDecisionForm = ({ request, onDone }) => {
                 justification: values.justification,
                 items: Object.entries(values.approved).map(([id, approvedQty]) => ({
                     id: Number(id),
-                    approvedQty,
+                    approvedQty: parseQuantity(approvedQty),
                 })),
             })
             toast.success(

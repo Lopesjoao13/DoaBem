@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { ENTRY_MESSAGES } from '@/constants/entryMessages.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useForm } from '@/hooks/useForm.js'
@@ -54,6 +55,7 @@ export const useEntryForm = ({ onSaved }) => {
     const [isReviewing, setIsReviewing] = useState(false)
 
     const form = useForm({
+        invalidates: INVALIDATES.STOCK_CHANGE,
         initialValues: {
             entryDate: getTodayIso(),
             source: '',

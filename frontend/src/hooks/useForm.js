@@ -6,11 +6,11 @@ import { hasErrors } from '@/utils/validation.js'
 const resolveValue = (valueOrUpdater, current) =>
     typeof valueOrUpdater === 'function' ? valueOrUpdater(current) : valueOrUpdater
 
-export const useForm = ({ initialValues, validate, onSubmit }) => {
+export const useForm = ({ initialValues, validate, onSubmit, invalidates }) => {
     const [values, setValues] = useState(initialValues)
     const [errors, setErrors] = useState({})
     const [formError, setFormError] = useState('')
-    const mutation = useMutation({ mutationFn: onSubmit })
+    const mutation = useMutation({ mutationFn: onSubmit, meta: { invalidates } })
 
     const changeField = useCallback((name, valueOrUpdater) => {
         setValues((current) => ({

@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { STOCK_MESSAGES } from '@/constants/stockMessages.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
@@ -26,6 +27,13 @@ const validate = (values, item) => {
     return errors
 }
 
+const toAdjustmentRequest = (values) => ({
+    itemId: Number(values.itemId),
+    quantity: parseQuantity(values.quantity),
+    adjustmentReason: values.adjustmentReason,
+    notes: values.notes.trim(),
+})
+
 export const useAdjustmentForm = ({ initialItemId, onSaved }) => {
     const toast = useToast()
     const { data, isLoading } = useFetch([QUERY_KEYS.STOCK, { status: RECORD_STATUS.ACTIVE }], () =>
@@ -34,6 +42,7 @@ export const useAdjustmentForm = ({ initialItemId, onSaved }) => {
     const items = data ?? EMPTY_ROWS
 
     const form = useForm({
+        invalidates: INVALIDATES.STOCK_CHANGE,
         initialValues: {
             itemId: initialItemId ? String(initialItemId) : '',
             quantity: '',
@@ -46,7 +55,7 @@ export const useAdjustmentForm = ({ initialItemId, onSaved }) => {
                 items.find((row) => String(row.itemId) === values.itemId),
             ),
         onSubmit: async (values) => {
-            await createAdjustment(values)
+            await createAdjustment(toAdjustmentRequest(values))
             toast.success(STOCK_MESSAGES.adjustmentSaved)
             onSaved()
         },

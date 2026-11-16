@@ -1,12 +1,23 @@
-import { mockOnly } from './mockOnly.js'
+import { USE_MOCK } from '@/constants/api.js'
+import { DEFAULT_PAGE_SIZE } from '@/constants/apiMessages.js'
+import { httpClient } from './httpClient.js'
 import {
     mockGetMovement,
     mockListMovements,
     mockReverseMovement,
 } from '@/services/mock/mockMovements.js'
 
-export const listMovements = mockOnly((filters) => mockListMovements(filters))
+const api = {
+    listMovements: (filters) =>
+        httpClient.get('/movements', { size: DEFAULT_PAGE_SIZE, ...filters }),
+    getMovement: (id) => httpClient.get(`/movements/${id}`),
+    reverseMovement: (id, reversal) => httpClient.post(`/movements/${id}/reverse`, reversal),
+}
 
-export const getMovement = mockOnly((id) => mockGetMovement(id))
+const mock = {
+    listMovements: mockListMovements,
+    getMovement: mockGetMovement,
+    reverseMovement: mockReverseMovement,
+}
 
-export const reverseMovement = mockOnly((id, reversal) => mockReverseMovement(id, reversal))
+export const { listMovements, getMovement, reverseMovement } = USE_MOCK ? mock : api

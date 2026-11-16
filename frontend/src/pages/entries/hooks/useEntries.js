@@ -23,13 +23,14 @@ const matchesRegisteredBy = (entry, registeredBy) =>
     registeredBy === ALL_FILTER || entry.registeredBy === registeredBy
 
 const matchesItem = (entry, itemId) =>
-    itemId === ALL_FILTER || (entry.receivedItems ?? []).some((item) => item.itemId === itemId)
+    itemId === ALL_FILTER ||
+    (entry.receivedItems ?? []).some((item) => String(item.itemId) === itemId)
 
 const listReceivedItems = (entries) =>
     [
         ...new Map(
             entries.flatMap((entry) =>
-                (entry.receivedItems ?? []).map((item) => [item.itemId, item.itemName]),
+                (entry.receivedItems ?? []).map((item) => [String(item.itemId), item.itemName]),
             ),
         ),
     ]

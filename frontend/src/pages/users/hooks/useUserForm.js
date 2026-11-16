@@ -1,4 +1,5 @@
 import { USER_MESSAGES } from '@/pages/users/constants/userMessages.js'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useToast } from '@/hooks/useToast.js'
@@ -21,6 +22,7 @@ const saveUser = ({ name, email, password, role }, user) =>
 export const useUserForm = ({ user, onSaved }) => {
     const toast = useToast()
     return useForm({
+        invalidates: INVALIDATES.USERS,
         initialValues: {
             name: user?.name ?? '',
             email: user?.email ?? '',

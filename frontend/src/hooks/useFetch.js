@@ -1,11 +1,12 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { API_MESSAGES } from '@/constants/apiMessages.js'
 
-export const useFetch = (queryKey, loader) => {
+export const useFetch = (queryKey, loader, options = {}) => {
     const query = useQuery({
         queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
         queryFn: loader,
         placeholderData: keepPreviousData,
+        ...options,
     })
 
     return {

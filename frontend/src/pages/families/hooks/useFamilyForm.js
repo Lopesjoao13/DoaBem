@@ -1,4 +1,5 @@
 import { FAMILY_MESSAGES } from '@/pages/families/constants/familyMessages.js'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useToast } from '@/hooks/useToast.js'
@@ -22,6 +23,7 @@ const saveFamily = (values, family) => {
 export const useFamilyForm = ({ family, onSaved }) => {
     const toast = useToast()
     return useForm({
+        invalidates: INVALIDATES.FAMILIES,
         initialValues: {
             responsibleName: family?.responsibleName ?? '',
             phone: family?.phone ?? '',

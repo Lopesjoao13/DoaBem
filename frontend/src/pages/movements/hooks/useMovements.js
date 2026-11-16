@@ -1,7 +1,8 @@
+import { useQuery } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { LIST_ALL_PARAMS } from '@/constants/api.js'
 import { useDetailParam } from '@/hooks/useDetailParam.js'
-import { QUERY_KEYS } from '@/constants/queryKeys.js'
+import { QUERY_KEYS, STALE_TIME } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useFilterParams } from '@/hooks/useFilterParams.js'
 import { listItems } from '@/services/catalogService.js'
@@ -29,8 +30,12 @@ export const useMovements = () => {
     const movements = useFetch([QUERY_KEYS.MOVEMENTS, filters, page], () =>
         listMovements({ ...filters, page }),
     )
-    const items = useFetch(QUERY_KEYS.ITEMS, () => listItems())
-    const users = useFetch(QUERY_KEYS.USER_OPTIONS, listUserOptions)
+    const items = useFetch(QUERY_KEYS.ITEMS, () => listItems(), {
+        staleTime: STALE_TIME.REFERENCE,
+    })
+    const users = useFetch(QUERY_KEYS.USER_OPTIONS, listUserOptions, {
+        staleTime: STALE_TIME.REFERENCE,
+    })
 
     const itemOptions = useMemo(
         () => toOptions(items.data?.content ?? EMPTY_ROWS, (item) => item.name),
@@ -56,7 +61,13 @@ export const useMovements = () => {
         setPage(value)
     }
 
-    const fetchAll = async () => (await listMovements({ ...filters, ...LIST_ALL_PARAMS })).content
+    // Exportação sob demanda: a consulta só roda quando o botão chama refetch.
+    const exportQuery = useQuery({
+        queryKey: [QUERY_KEYS.MOVEMENTS, 'export', filters],
+        queryFn: () => listMovements({ ...filters, ...LIST_ALL_PARAMS }),
+        enabled: false,
+    })
+    const fetchAll = async () => (await exportQuery.refetch({ throwOnError: true })).data.content
 
     return {
         fetchAll,

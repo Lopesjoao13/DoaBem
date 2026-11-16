@@ -2,9 +2,9 @@ import { useMutation } from '@tanstack/react-query'
 import { API_MESSAGES } from '@/constants/apiMessages.js'
 import { useToast } from '@/hooks/useToast.js'
 
-export const useAsyncAction = () => {
+export const useAsyncAction = ({ invalidates } = {}) => {
     const toast = useToast()
-    const mutation = useMutation({ mutationFn: (action) => action() })
+    const mutation = useMutation({ mutationFn: (action) => action(), meta: { invalidates } })
 
     const run = async (action, successMessage) => {
         try {

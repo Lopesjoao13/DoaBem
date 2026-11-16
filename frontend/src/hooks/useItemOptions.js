@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
-import { QUERY_KEYS } from '@/constants/queryKeys.js'
+import { QUERY_KEYS, STALE_TIME } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { listItems } from '@/services/catalogService.js'
 import { getStock } from '@/services/stockService.js'
@@ -19,6 +19,7 @@ export const useItemOptions = ({ withStock = false } = {}) => {
             ? [QUERY_KEYS.STOCK, { status: RECORD_STATUS.ACTIVE }]
             : [QUERY_KEYS.ITEMS, { status: RECORD_STATUS.ACTIVE, options: true }],
         withStock ? loadStockItems : loadCatalogItems,
+        withStock ? {} : { staleTime: STALE_TIME.REFERENCE },
     )
     const items = data ?? EMPTY_ROWS
 

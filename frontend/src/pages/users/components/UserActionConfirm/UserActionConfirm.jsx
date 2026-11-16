@@ -1,10 +1,11 @@
 import { ConfirmDialog } from '@/components/ConfirmDialog/ConfirmDialog.jsx'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { USER_MESSAGES } from '@/pages/users/constants/userMessages.js'
 import { useAsyncAction } from '@/hooks/useAsyncAction.js'
 import { setUserActive } from '@/services/userService.js'
 
 export const UserActionConfirm = ({ user, onClose, onDone }) => {
-    const { isRunning, run } = useAsyncAction()
+    const { isRunning, run } = useAsyncAction({ invalidates: INVALIDATES.USERS })
 
     const handleConfirm = async () => {
         const result = await run(

@@ -1,4 +1,5 @@
 import { CATALOG_MESSAGES } from '@/pages/items/constants/catalogMessages.js'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useToast } from '@/hooks/useToast.js'
@@ -35,6 +36,7 @@ const saveItem = ({ name, categoryId, unitOfMeasure, minStock }, item) => {
 export const useItemForm = ({ item, onSaved }) => {
     const toast = useToast()
     return useForm({
+        invalidates: INVALIDATES.CATALOG,
         initialValues: toInitialValues(item),
         validate,
         onSubmit: async (values) => {

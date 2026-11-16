@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { REQUEST_MESSAGES } from '@/constants/requestMessages.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
@@ -10,7 +11,7 @@ import { useToast } from '@/hooks/useToast.js'
 import { listBeneficiaries } from '@/services/beneficiaryService.js'
 import { createRequest, getDeliverySummary } from '@/services/requestService.js'
 import { createLineKey, removeLine, updateLine } from '@/utils/lines.js'
-import { validateQuantity } from '@/utils/quantity.js'
+import { parseQuantity, validateQuantity } from '@/utils/quantity.js'
 import { EMPTY_ROWS } from '@/constants/emptyValues.js'
 
 const createEmptyLine = () => ({ key: createLineKey(), itemId: '', requestedQty: '' })
@@ -36,6 +37,14 @@ const buildValidator = (itemsById) => (values) => {
     return errors
 }
 
+const toRequestPayload = ({ beneficiaryId, lines }) => ({
+    beneficiaryId: Number(beneficiaryId),
+    lines: lines.map((line) => ({
+        itemId: Number(line.itemId),
+        requestedQty: parseQuantity(line.requestedQty),
+    })),
+})
+
 const useDeliverySummary = (beneficiaryId) => {
     return useFetch([QUERY_KEYS.DELIVERY_SUMMARY, beneficiaryId], () =>
         beneficiaryId ? getDeliverySummary(beneficiaryId) : null,
@@ -59,13 +68,14 @@ export const useRequestForm = ({ familyId = '', onSaved }) => {
     )
 
     const form = useForm({
+        invalidates: INVALIDATES.REQUEST_CHANGE,
         initialValues: {
             beneficiaryId: familyId,
             lines: [createEmptyLine()],
         },
         validate: buildValidator(itemOptions.itemsById),
         onSubmit: async (values) => {
-            const { id } = await createRequest(values)
+            const { id } = await createRequest(toRequestPayload(values))
             toast.success(REQUEST_MESSAGES.created)
             onSaved(id)
         },

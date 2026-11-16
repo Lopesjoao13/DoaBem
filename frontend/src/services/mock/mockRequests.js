@@ -21,6 +21,7 @@ import {
     getUserName,
     normalizeText,
     nowIso,
+    paginate,
 } from './mockHelpers.js'
 import { getBalances } from './mockStock.js'
 
@@ -51,14 +52,17 @@ const countByStatus = () =>
         { [ALL_REQUESTS_TAB]: db.requests.length },
     )
 
-export const mockListRequests = ({ status } = {}) =>
-    simulateRequest(() => ({
-        content: db.requests
+export const mockListRequests = ({ status, page = 0, size } = {}) =>
+    simulateRequest(() => {
+        const rows = db.requests
             .filter((request) => !status || request.status === status)
             .map(toRequestRow)
-            .sort((first, second) => second.createdAt.localeCompare(first.createdAt)),
-        counts: countByStatus(),
-    }))
+            .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+        return {
+            ...paginate(rows, page, size ?? Math.max(rows.length, 1)),
+            counts: countByStatus(),
+        }
+    })
 
 const toRequestItemDetail = (requestItem, balances) => {
     const item = getItem(requestItem.itemId)

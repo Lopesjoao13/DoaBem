@@ -1,4 +1,5 @@
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useToast } from '@/hooks/useToast.js'
 import { isBlank } from '@/utils/validation.js'
@@ -12,6 +13,7 @@ export const useReasonForm = ({
 }) => {
     const toast = useToast()
     return useForm({
+        invalidates: INVALIDATES.REQUEST_CHANGE,
         initialValues: { [field]: '' },
         validate: (values) =>
             required && isBlank(values[field])

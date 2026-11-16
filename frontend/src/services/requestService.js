@@ -1,6 +1,5 @@
-import { USE_MOCK } from '@/constants/api.js'
+import { LIST_ALL_PARAMS, USE_MOCK } from '@/constants/api.js'
 import { httpClient } from './httpClient.js'
-import { mockOnly } from './mockOnly.js'
 import { mockGetDeliverySummary, mockGetFamilyHistory } from '@/services/mock/mockDeliveries.js'
 import {
     mockCancelRequest,
@@ -12,29 +11,39 @@ import {
     mockPickRequest,
 } from '@/services/mock/mockRequests.js'
 
-export const listRequests = mockOnly((filters) => mockListRequests(filters))
-
-export const getRequest = mockOnly((id) => mockGetRequest(id))
-
-export const createRequest = mockOnly((request) => mockCreateRequest(request))
-
-export const decideRequest = mockOnly((id, decision) => mockDecideRequest(id, decision))
-
-export const pickRequest = mockOnly((id) => mockPickRequest(id))
-
-export const deliverRequest = mockOnly((id, delivery) => mockDeliverRequest(id, delivery))
-
-export const cancelRequest = mockOnly((id, cancellation) => mockCancelRequest(id, cancellation))
-
-const beneficiaryApi = {
+const api = {
+    listRequests: (filters) => httpClient.get('/requests', { ...LIST_ALL_PARAMS, ...filters }),
+    getRequest: (id) => httpClient.get(`/requests/${id}`),
+    createRequest: (request) => httpClient.post('/requests', request),
+    decideRequest: (id, decision) => httpClient.post(`/requests/${id}/decision`, decision),
+    pickRequest: (id) => httpClient.post(`/requests/${id}/pick`),
+    deliverRequest: (id, delivery) => httpClient.post(`/requests/${id}/deliver`, delivery),
+    cancelRequest: (id, cancellation) => httpClient.post(`/requests/${id}/cancel`, cancellation),
     getDeliverySummary: (beneficiaryId) =>
         httpClient.get(`/beneficiaries/${beneficiaryId}/delivery-summary`),
     getFamilyHistory: (beneficiaryId) => httpClient.get(`/beneficiaries/${beneficiaryId}/requests`),
 }
 
-const beneficiaryMock = {
+const mock = {
+    listRequests: mockListRequests,
+    getRequest: mockGetRequest,
+    createRequest: mockCreateRequest,
+    decideRequest: mockDecideRequest,
+    pickRequest: mockPickRequest,
+    deliverRequest: mockDeliverRequest,
+    cancelRequest: mockCancelRequest,
     getDeliverySummary: mockGetDeliverySummary,
     getFamilyHistory: mockGetFamilyHistory,
 }
 
-export const { getDeliverySummary, getFamilyHistory } = USE_MOCK ? beneficiaryMock : beneficiaryApi
+export const {
+    listRequests,
+    getRequest,
+    createRequest,
+    decideRequest,
+    pickRequest,
+    deliverRequest,
+    cancelRequest,
+    getDeliverySummary,
+    getFamilyHistory,
+} = USE_MOCK ? mock : api
