@@ -1,0 +1,16 @@
+export const VALIDATION_MESSAGES = {
+    required: 'Campo obrigatório.',
+    quantityRequired: 'Informe a quantidade.',
+    quantityPositive: 'Informe uma quantidade maior que zero.',
+    quantityNotNegative: 'A quantidade não pode ser negativa.',
+    quantityInteger: 'Itens em unidade aceitam apenas números inteiros.',
+    quantityDecimals: 'Use no máximo 3 casas decimais.',
+    integerPositive: 'Informe um número inteiro maior que zero.',
+    emailInvalid: 'Informe um e-mail válido.',
+    passwordLength: 'A senha deve ter entre 8 e 72 caracteres.',
+    linesRequired: 'Adicione pelo menos um item.',
+    duplicatedItem: 'Este item já foi adicionado.',
+    futureDate: 'A data não pode estar no futuro.',
+    justificationRequired: 'Informe a justificativa.',
+    reasonRequired: 'Informe o motivo.',
+}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="054ae499-6aae-4cec-a88e-c1536af8c14f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/DoaBem.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/doabem/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/src/main/java/br/univille/doabem/DoabemApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/doabem/src/main/java/br/univille/doabem/DoabemApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/src/main/java/br/univille/doabem/entries/entity/Beneficiary.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/src/main/java/br/univille/doabem/entries/entity/Category.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/src/main/java/br/univille/doabem/entries/entity/Item.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/src/main/java/br/univille/doabem/entries/entity/Status.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/src/main/java/br/univille/doabem/entries/entity/UnitOfMeasure.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/doabem/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/doabem/src/test/java/br/univille/doabem/DoabemApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/doabem/src/test/java/br/univille/doabem/DoabemApplicationTests.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature/Joao" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="3L1pKRPodLi9Qz8Zj5kP3ryJ5ho" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.DoabemApplication.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "feature/Kaue",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/Desenvolvimento/Java/Projetos/DoaBem/backend/doabem/src/main/resources"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Desenvolvimento\Java\Projetos\DoaBem\backend\doabem\src\main\resources" />
+    </key>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="054ae499-6aae-4cec-a88e-c1536af8c14f" name="Changes" comment="" />
+      <created>1792631363200</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1792631363200</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
