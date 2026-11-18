@@ -10,6 +10,7 @@ import {
     Empty,
     List,
     Option,
+    OptionLabel,
     SearchInput,
     Trigger,
     Value,
@@ -143,7 +144,7 @@ export const Select = ({
                                             {isSelected && <IconCheck size={12} stroke={3} />}
                                         </Checkbox>
                                     )}
-                                    {item.label}
+                                    <OptionLabel title={item.label}>{item.label}</OptionLabel>
                                     {!multiple && isSelected && (
                                         <Check>
                                             <IconCheck size={16} stroke={2} />

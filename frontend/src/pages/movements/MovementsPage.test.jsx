@@ -20,7 +20,7 @@ const movement = (id, overrides = {}) => ({
     reason: null,
     reversesId: null,
     reversedById: null,
-    reference: { label: `Entrada #${id} — Mercado`, entryId: id },
+    reference: { label: `Entrada #${id} - Mercado`, entryId: id },
     ...overrides,
 })
 
@@ -82,7 +82,7 @@ describe('MovementsPage', () => {
                         [
                             movement(page === 0 ? 1 : 11, {
                                 reference: {
-                                    label: page === 0 ? 'Entrada #1 — A' : 'Entrada #11 — B',
+                                    label: page === 0 ? 'Entrada #1 - A' : 'Entrada #11 - B',
                                 },
                             }),
                         ],
@@ -96,7 +96,7 @@ describe('MovementsPage', () => {
             }),
         )
         renderPage(<MovementsPage />)
-        await screen.findByText(/Entrada #1 —/)
+        await screen.findByText(/Entrada #1 -/)
         await userEvent.click(screen.getByRole('button', { name: '2' }))
         expect(await screen.findByText(/Entrada #11/)).toBeInTheDocument()
         expect(pages).toEqual(expect.arrayContaining([0, 1]))
@@ -187,7 +187,7 @@ describe('MovementsPage', () => {
             await openDetail({
                 type: 'ADJUSTMENT',
                 adjustmentReason: 'LOSS',
-                reference: { label: 'Ajuste — Perda' },
+                reference: { label: 'Ajuste - Perda' },
             })
             const dialog = await screen.findByRole('dialog')
             expect(await within(dialog).findByText(/#7/)).toBeInTheDocument()
@@ -206,7 +206,7 @@ describe('MovementsPage', () => {
             await openDetail({
                 type: 'ADJUSTMENT',
                 adjustmentReason: 'LOSS',
-                reference: { label: 'Ajuste — Perda' },
+                reference: { label: 'Ajuste - Perda' },
             })
             const dialog = await screen.findByRole('dialog')
             await userEvent.click(await within(dialog).findByRole('button', { name: /estornar/i }))
@@ -227,7 +227,7 @@ describe('MovementsPage', () => {
                 {
                     type: 'ADJUSTMENT',
                     adjustmentReason: 'LOSS',
-                    reference: { label: 'Ajuste — Perda' },
+                    reference: { label: 'Ajuste - Perda' },
                 },
                 'OPERATOR',
             )
@@ -242,7 +242,7 @@ describe('MovementsPage', () => {
             await openDetail({
                 type: 'ADJUSTMENT',
                 reversedById: 9,
-                reference: { label: 'Ajuste — Perda' },
+                reference: { label: 'Ajuste - Perda' },
             })
             const dialog = await screen.findByRole('dialog')
             await within(dialog).findByText(/#7/)

@@ -9,6 +9,7 @@ import {
     mockGetRequest,
     mockListRequests,
     mockPickRequest,
+    mockReopenRequest,
 } from '@/services/mock/mockRequests.js'
 
 const api = {
@@ -16,6 +17,7 @@ const api = {
     getRequest: (id) => httpClient.get(`/requests/${id}`),
     createRequest: (request) => httpClient.post('/requests', request),
     decideRequest: (id, decision) => httpClient.post(`/requests/${id}/decision`, decision),
+    reopenRequest: (id) => httpClient.post(`/requests/${id}/reopen`),
     pickRequest: (id) => httpClient.post(`/requests/${id}/pick`),
     deliverRequest: (id, delivery) => httpClient.post(`/requests/${id}/deliver`, delivery),
     cancelRequest: (id, cancellation) => httpClient.post(`/requests/${id}/cancel`, cancellation),
@@ -29,6 +31,7 @@ const mock = {
     getRequest: mockGetRequest,
     createRequest: mockCreateRequest,
     decideRequest: mockDecideRequest,
+    reopenRequest: mockReopenRequest,
     pickRequest: mockPickRequest,
     deliverRequest: mockDeliverRequest,
     cancelRequest: mockCancelRequest,
@@ -41,6 +44,7 @@ export const {
     getRequest,
     createRequest,
     decideRequest,
+    reopenRequest,
     pickRequest,
     deliverRequest,
     cancelRequest,

@@ -11,6 +11,7 @@ const resolveActions = (request, { canDecide, canCancelOpen, canCancelPicked }) 
     const isOpen = status === REQUEST_STATUS.PENDING || status === REQUEST_STATUS.APPROVED
     return {
         canDecide: canDecide && status === REQUEST_STATUS.PENDING,
+        canReopen: canDecide && status === REQUEST_STATUS.APPROVED,
         canPick: status === REQUEST_STATUS.APPROVED,
         canDeliver: status === REQUEST_STATUS.PICKED,
         canCancel:

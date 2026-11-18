@@ -11,7 +11,7 @@ import {
 export const toCategoryStatus = (active) => (active ? RECORD_STATUS.ACTIVE : RECORD_STATUS.INACTIVE)
 export const CATEGORY_BASE_COLUMNS = [
     { key: 'name', header: 'Categoria', sortValue: (row) => row.name },
-    { key: 'description', header: 'Descrição', render: (row) => row.description || '—' },
+    { key: 'description', header: 'Descrição', render: (row) => row.description || '-' },
     {
         key: 'active',
         header: 'Situação',

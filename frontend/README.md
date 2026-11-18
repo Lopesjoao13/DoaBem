@@ -1,4 +1,4 @@
-# Frontend — DoaBem
+# Frontend - DoaBem
 
 Interface web que consome a API REST do backend, feita em React + Vite.
 

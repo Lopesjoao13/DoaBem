@@ -1,12 +1,14 @@
 import { useCallback, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { API_MESSAGES } from '@/constants/apiMessages.js'
+import { useToast } from '@/hooks/useToast.js'
 import { hasErrors } from '@/utils/validation.js'
 
 const resolveValue = (valueOrUpdater, current) =>
     typeof valueOrUpdater === 'function' ? valueOrUpdater(current) : valueOrUpdater
 
 export const useForm = ({ initialValues, validate, onSubmit, invalidates }) => {
+    const toast = useToast()
     const [values, setValues] = useState(initialValues)
     const [errors, setErrors] = useState({})
     const [formError, setFormError] = useState('')
@@ -47,7 +49,9 @@ export const useForm = ({ initialValues, validate, onSubmit, invalidates }) => {
             return true
         } catch (error) {
             console.error('Falha ao enviar o formulário:', error.message)
-            setFormError(error.message || API_MESSAGES.unexpected)
+            const message = error.message || API_MESSAGES.unexpected
+            setFormError(message)
+            toast.error(message)
             if (error.fieldErrors) setErrors(error.fieldErrors)
             return false
         }

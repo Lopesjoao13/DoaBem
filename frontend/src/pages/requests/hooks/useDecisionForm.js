@@ -7,7 +7,7 @@ import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useToast } from '@/hooks/useToast.js'
 import { decideRequest } from '@/services/requestService.js'
-import { parseQuantity, validateQuantity } from '@/utils/quantity.js'
+import { formatQuantityInput, parseQuantity, validateQuantity } from '@/utils/quantity.js'
 import { isBlank } from '@/utils/validation.js'
 
 const validateApproval = (request, values) => {
@@ -45,7 +45,7 @@ export const useDecisionForm = ({ request, onDone }) => {
             approved: Object.fromEntries(
                 request.items.map((requestItem) => [
                     requestItem.id,
-                    String(requestItem.requestedQty),
+                    formatQuantityInput(requestItem.requestedQty),
                 ]),
             ),
             justification: '',

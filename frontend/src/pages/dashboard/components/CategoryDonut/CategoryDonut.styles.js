@@ -56,7 +56,7 @@ export const Legend = styled.ul`
 
 export const LegendRow = styled.li`
     display: grid;
-    grid-template-columns: 12px 1fr auto 40px;
+    grid-template-columns: 12px minmax(0, 1fr) auto 40px;
     align-items: center;
     gap: 8px;
     font-size: 14px;
@@ -73,4 +73,11 @@ export const Swatch = styled.span`
     height: 12px;
     border-radius: var(--radius-xs);
     background: ${({ $color }) => $color};
+`
+
+export const CategoryName = styled.span`
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `

@@ -11,6 +11,7 @@ import { REQUEST_STATUS } from '@/constants/requestStatus.js'
 import { TONES } from '@/constants/tones.js'
 import { useReasonForm } from '@/pages/requests/hooks/useReasonForm.js'
 import { cancelRequest } from '@/services/requestService.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
 
 export const CancelDialog = ({ request, onClose, onDone }) => {
     const formId = useId()
@@ -49,9 +50,16 @@ export const CancelDialog = ({ request, onClose, onDone }) => {
                         ? 'As reservas desta solicitação serão liberadas e o disponível volta ao valor anterior.'
                         : 'Nada foi reservado ainda; o estoque não muda.'}
                 </Callout>
-                <Field label="Motivo" htmlFor={`${formId}-reason`} error={form.errors.reason}>
+                <Field
+                    maxLength={FIELD_LIMITS.JUSTIFICATION}
+                    length={form.values.reason.length}
+                    label="Motivo"
+                    htmlFor={`${formId}-reason`}
+                    error={form.errors.reason}
+                >
                     <Textarea
                         id={`${formId}-reason`}
+                        maxLength={FIELD_LIMITS.JUSTIFICATION}
                         name="reason"
                         value={form.values.reason}
                         onChange={form.handleChange}

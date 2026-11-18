@@ -4,14 +4,14 @@ import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useForm } from '@/hooks/useForm.js'
 import { useToast } from '@/hooks/useToast.js'
 import { createItem, updateItem } from '@/services/catalogService.js'
-import { parseQuantity, validateQuantity } from '@/utils/quantity.js'
+import { formatQuantityInput, parseQuantity, validateQuantity } from '@/utils/quantity.js'
 import { isBlank } from '@/utils/validation.js'
 
 const toInitialValues = (item) => ({
     name: item?.name ?? '',
     categoryId: item ? String(item.categoryId) : '',
     unitOfMeasure: item?.unitOfMeasure ?? '',
-    minStock: item ? String(item.minStock) : '0',
+    minStock: item ? formatQuantityInput(item.minStock) : '0',
 })
 
 const validate = (values) => {

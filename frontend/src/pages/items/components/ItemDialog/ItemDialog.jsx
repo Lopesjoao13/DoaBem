@@ -11,6 +11,8 @@ import { UNIT_LABELS } from '@/constants/units.js'
 import { useItemForm } from '@/pages/items/hooks/useItemForm.js'
 import { getDescribedBy } from '@/utils/a11y.js'
 import { UNIT_OPTIONS, SELECT_CATEGORY, SELECT_UNIT } from '@/pages/items/constants/itemOptions.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
+import { sanitizeQuantity } from '@/utils/quantity.js'
 
 export const ItemDialog = ({ item, categories, onClose, onSaved }) => {
     const formId = useId()
@@ -38,11 +40,18 @@ export const ItemDialog = ({ item, categories, onClose, onSaved }) => {
         >
             <FormStack id={formId} onSubmit={form.submit} noValidate>
                 {form.formError && <Callout tone={TONES.CRITICAL}>{form.formError}</Callout>}
-                <Field label="Nome" htmlFor={`${formId}-name`} error={errors.name}>
+                <Field
+                    maxLength={FIELD_LIMITS.ITEM_NAME}
+                    length={values.name.length}
+                    label="Nome"
+                    htmlFor={`${formId}-name`}
+                    error={errors.name}
+                >
                     <Input
                         id={`${formId}-name`}
                         error={errors.name}
                         aria-describedby={getDescribedBy(`${formId}-name`, { error: errors.name })}
+                        maxLength={FIELD_LIMITS.ITEM_NAME}
                         name="name"
                         value={values.name}
                         onChange={form.handleChange}
@@ -97,8 +106,14 @@ export const ItemDialog = ({ item, categories, onClose, onSaved }) => {
                             })}
                             name="minStock"
                             inputMode="decimal"
+                            disabled={!values.unitOfMeasure}
                             value={values.minStock}
-                            onChange={form.handleChange}
+                            onChange={(event) =>
+                                form.changeField(
+                                    'minStock',
+                                    sanitizeQuantity(event.target.value, values.unitOfMeasure),
+                                )
+                            }
                         />
                     </Field>
                 </FormRow>

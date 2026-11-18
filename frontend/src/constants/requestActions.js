@@ -5,6 +5,7 @@ export const REQUEST_DECISIONS = {
 
 export const REQUEST_DIALOGS = {
     DECIDE: 'DECIDE',
+    REOPEN: 'REOPEN',
     PICK: 'PICK',
     DELIVER: 'DELIVER',
     CANCEL: 'CANCEL',

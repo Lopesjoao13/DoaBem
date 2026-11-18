@@ -13,6 +13,8 @@ import { UNIT_LABELS } from '@/constants/units.js'
 import { useDecisionForm } from '@/pages/requests/hooks/useDecisionForm.js'
 import { formatQuantity } from '@/utils/formatters.js'
 import { ItemMeta, ItemName, ItemRow, Items } from './DecisionDialog.styles.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
+import { sanitizeQuantity } from '@/utils/quantity.js'
 
 export const DecisionDialog = ({ request, onClose, onDone }) => {
     const formId = useId()
@@ -91,7 +93,13 @@ export const DecisionDialog = ({ request, onClose, onDone }) => {
                                     inputMode="decimal"
                                     value={form.values.approved[requestItem.id]}
                                     onChange={(event) =>
-                                        form.changeApproved(requestItem.id, event.target.value)
+                                        form.changeApproved(
+                                            requestItem.id,
+                                            sanitizeQuantity(
+                                                event.target.value,
+                                                requestItem.unitOfMeasure,
+                                            ),
+                                        )
                                     }
                                     error={approvedErrors[requestItem.id]}
                                 />
@@ -100,6 +108,8 @@ export const DecisionDialog = ({ request, onClose, onDone }) => {
                     ))}
                 </Items>
                 <Field
+                    maxLength={FIELD_LIMITS.JUSTIFICATION}
+                    length={form.values.justification.length}
                     label="Justificativa"
                     htmlFor={`${formId}-justification`}
                     hint="Obrigatória para aprovação parcial ou recusa. Aprovado 0 tira o item da distribuição."
@@ -107,6 +117,7 @@ export const DecisionDialog = ({ request, onClose, onDone }) => {
                 >
                     <Textarea
                         id={`${formId}-justification`}
+                        maxLength={FIELD_LIMITS.JUSTIFICATION}
                         name="justification"
                         value={form.values.justification}
                         onChange={form.handleChange}

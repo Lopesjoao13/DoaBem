@@ -10,6 +10,8 @@ import { FAMILY_MESSAGES } from '@/pages/families/constants/familyMessages.js'
 import { TONES } from '@/constants/tones.js'
 import { useFamilyForm } from '@/pages/families/hooks/useFamilyForm.js'
 import { getDescribedBy } from '@/utils/a11y.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
+import { sanitizeInteger } from '@/utils/quantity.js'
 
 export const FamilyDialog = ({ family, onClose, onSaved }) => {
     const formId = useId()
@@ -36,6 +38,8 @@ export const FamilyDialog = ({ family, onClose, onSaved }) => {
             <FormStack id={formId} onSubmit={form.submit} noValidate>
                 {form.formError && <Callout tone={TONES.CRITICAL}>{form.formError}</Callout>}
                 <Field
+                    maxLength={FIELD_LIMITS.RESPONSIBLE_NAME}
+                    length={values.responsibleName.length}
                     label="Nome do responsável"
                     htmlFor={`${formId}-name`}
                     error={errors.responsibleName}
@@ -46,6 +50,7 @@ export const FamilyDialog = ({ family, onClose, onSaved }) => {
                         aria-describedby={getDescribedBy(`${formId}-name`, {
                             error: errors.responsibleName,
                         })}
+                        maxLength={FIELD_LIMITS.RESPONSIBLE_NAME}
                         name="responsibleName"
                         value={values.responsibleName}
                         onChange={form.handleChange}
@@ -53,10 +58,16 @@ export const FamilyDialog = ({ family, onClose, onSaved }) => {
                     />
                 </Field>
                 <FormRow>
-                    <Field label="Telefone (opcional)" htmlFor={`${formId}-phone`}>
+                    <Field
+                        maxLength={FIELD_LIMITS.PHONE}
+                        length={values.phone.length}
+                        label="Telefone (opcional)"
+                        htmlFor={`${formId}-phone`}
+                    >
                         <Input
                             id={`${formId}-phone`}
                             aria-describedby={getDescribedBy(`${formId}-phone`, {})}
+                            maxLength={FIELD_LIMITS.PHONE}
                             name="phone"
                             type="tel"
                             value={values.phone}
@@ -77,26 +88,40 @@ export const FamilyDialog = ({ family, onClose, onSaved }) => {
                             name="householdSize"
                             inputMode="numeric"
                             value={values.householdSize}
-                            onChange={form.handleChange}
+                            onChange={(event) =>
+                                form.changeField(
+                                    'householdSize',
+                                    sanitizeInteger(event.target.value),
+                                )
+                            }
                         />
                     </Field>
                 </FormRow>
-                <Field label="Bairro / localidade (opcional)" htmlFor={`${formId}-neighborhood`}>
+                <Field
+                    maxLength={FIELD_LIMITS.NEIGHBORHOOD}
+                    length={values.neighborhood.length}
+                    label="Bairro / localidade (opcional)"
+                    htmlFor={`${formId}-neighborhood`}
+                >
                     <Input
                         id={`${formId}-neighborhood`}
                         aria-describedby={getDescribedBy(`${formId}-neighborhood`, {})}
+                        maxLength={FIELD_LIMITS.NEIGHBORHOOD}
                         name="neighborhood"
                         value={values.neighborhood}
                         onChange={form.handleChange}
                     />
                 </Field>
                 <Field
+                    maxLength={FIELD_LIMITS.NOTES}
+                    length={values.notes.length}
                     label="Observações (opcional)"
                     htmlFor={`${formId}-notes`}
                     hint={FAMILY_MESSAGES.notesHint}
                 >
                     <Textarea
                         id={`${formId}-notes`}
+                        maxLength={FIELD_LIMITS.NOTES}
                         name="notes"
                         value={values.notes}
                         onChange={form.handleChange}

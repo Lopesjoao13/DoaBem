@@ -1,4 +1,4 @@
-# DER — DoaBem
+# DER - DoaBem
 
 Versão 3 (06/10/2026): nomes de **tabelas, colunas e valores de enum em inglês**. A interface continua em português. Diagrama em Mermaid (renderiza no GitHub). Referências: `docs/requisitos.md` (RF, RN, Qxx) e `docs/decisoes.md`.
 
@@ -213,34 +213,34 @@ O PO e a interface usam termos em português; o banco, a API e o código usam in
 
 | Relacionamento | Cardinalidade | Chave estrangeira | Leitura |
 |---|---|---|---|
-| `category` — `item` | 1 : N | `item.category_id` | Uma categoria classifica vários itens |
-| `donation_entry` — `donation_entry_item` | 1 : 1..N | `donation_entry_item.donation_entry_id` | Uma entrada tem ao menos um item |
-| `item` — `donation_entry_item` | 1 : N | `donation_entry_item.item_id` | Um item é recebido em várias entradas |
-| `beneficiary` — `aid_request` | 1 : N | `aid_request.beneficiary_id` | Uma família faz várias solicitações |
-| `aid_request` — `aid_request_item` | 1 : 1..N | `aid_request_item.aid_request_id` | Uma solicitação pede ao menos um item |
-| `item` — `aid_request_item` | 1 : N | `aid_request_item.item_id` | Um item aparece em várias solicitações |
-| `aid_request` — `delivery` | 1 : 0..1 | `delivery.aid_request_id` (UNIQUE) | Sem entrega parcial (Q10) |
-| `delivery` — `delivery_item` | 1 : 1..N | `delivery_item.delivery_id` | Uma entrega tem ao menos um item |
-| `aid_request_item` — `delivery_item` | 1 : 0..N | `delivery_item.aid_request_item_id` | Item aprovado e entregue (0..1 efetivo; mais de um só após estorno) |
-| `item` — `stock_movement` | 1 : N | `stock_movement.item_id` | Todo item acumula histórico (inclui ADJUSTMENT, sem documento de origem) |
-| `donation_entry_item` — `stock_movement` | 1 : 1 | `stock_movement.donation_entry_item_id` | Cada item recebido gera exatamente uma ENTRY |
-| `aid_request_item` — `stock_movement` | 1 : 0..N | `stock_movement.aid_request_item_id` | RESERVE na separação e RELEASE no cancelamento |
-| `delivery_item` — `stock_movement` | 1 : 1..2 | `stock_movement.delivery_item_id` | DELIVERY e a RELEASE da reserva consumida |
-| `stock_movement` — `stock_movement` | 0..1 : 0..1 | `stock_movement.reverses_id` (UNIQUE) | Estornada no máximo uma vez (Q13) |
-| `app_user` — `donation_entry` | 1 : N | `donation_entry.user_id` | Responsável pela entrada |
-| `app_user` — `aid_request` | 1 : N em 4 papéis | `requested_by_id`, `decided_by_id`, `picked_by_id`, `cancelled_by_id` | Os três últimos são opcionais |
-| `app_user` — `delivery` | 1 : N | `delivery.delivered_by_id` | Quem confirmou a entrega (RN05) |
-| `app_user` — `stock_movement` | 1 : N | `stock_movement.user_id` | Quem originou a movimentação |
+| `category` - `item` | 1 : N | `item.category_id` | Uma categoria classifica vários itens |
+| `donation_entry` - `donation_entry_item` | 1 : 1..N | `donation_entry_item.donation_entry_id` | Uma entrada tem ao menos um item |
+| `item` - `donation_entry_item` | 1 : N | `donation_entry_item.item_id` | Um item é recebido em várias entradas |
+| `beneficiary` - `aid_request` | 1 : N | `aid_request.beneficiary_id` | Uma família faz várias solicitações |
+| `aid_request` - `aid_request_item` | 1 : 1..N | `aid_request_item.aid_request_id` | Uma solicitação pede ao menos um item |
+| `item` - `aid_request_item` | 1 : N | `aid_request_item.item_id` | Um item aparece em várias solicitações |
+| `aid_request` - `delivery` | 1 : 0..1 | `delivery.aid_request_id` (UNIQUE) | Sem entrega parcial (Q10) |
+| `delivery` - `delivery_item` | 1 : 1..N | `delivery_item.delivery_id` | Uma entrega tem ao menos um item |
+| `aid_request_item` - `delivery_item` | 1 : 0..N | `delivery_item.aid_request_item_id` | Item aprovado e entregue (0..1 efetivo; mais de um só após estorno) |
+| `item` - `stock_movement` | 1 : N | `stock_movement.item_id` | Todo item acumula histórico (inclui ADJUSTMENT, sem documento de origem) |
+| `donation_entry_item` - `stock_movement` | 1 : 1 | `stock_movement.donation_entry_item_id` | Cada item recebido gera exatamente uma ENTRY |
+| `aid_request_item` - `stock_movement` | 1 : 0..N | `stock_movement.aid_request_item_id` | RESERVE na separação e RELEASE no cancelamento |
+| `delivery_item` - `stock_movement` | 1 : 1..2 | `stock_movement.delivery_item_id` | DELIVERY e a RELEASE da reserva consumida |
+| `stock_movement` - `stock_movement` | 0..1 : 0..1 | `stock_movement.reverses_id` (UNIQUE) | Estornada no máximo uma vez (Q13) |
+| `app_user` - `donation_entry` | 1 : N | `donation_entry.user_id` | Responsável pela entrada |
+| `app_user` - `aid_request` | 1 : N em 4 papéis | `requested_by_id`, `decided_by_id`, `picked_by_id`, `cancelled_by_id` | Os três últimos são opcionais |
+| `app_user` - `delivery` | 1 : N | `delivery.delivered_by_id` | Quem confirmou a entrega (RN05) |
+| `app_user` - `stock_movement` | 1 : N | `stock_movement.user_id` | Quem originou a movimentação |
 
 ## 5. Como o saldo é obtido (sem coluna de saldo)
 
 | Tipo | Efeito no físico | Efeito no reservado | Quando nasce |
 |---|---|---|---|
-| `ENTRY` | + quantidade | — | Confirmação da entrada |
-| `DELIVERY` | − quantidade | — | Confirmação da entrega |
-| `ADJUSTMENT` | − quantidade | — | Saída por ajuste (perda, avaria, vencimento, transferência), só Coordenador |
-| `RESERVE` | — | + quantidade | Separação (não na aprovação) |
-| `RELEASE` | — | − quantidade | Cancelamento da separação ou consumo da reserva na entrega |
+| `ENTRY` | + quantidade | - | Confirmação da entrada |
+| `DELIVERY` | − quantidade | - | Confirmação da entrega |
+| `ADJUSTMENT` | − quantidade | - | Saída por ajuste (perda, avaria, vencimento, transferência), só Coordenador |
+| `RESERVE` | - | + quantidade | Separação (não na aprovação) |
+| `RELEASE` | - | − quantidade | Cancelamento da separação ou consumo da reserva na entrega |
 | `REVERSAL` | Inverte o efeito da movimentação apontada por `reverses_id` | | Estorno justificado |
 
 - **Físico** = soma dos efeitos no físico. **Reservado** = soma dos efeitos no reservado. **Disponível** = físico − reservado.

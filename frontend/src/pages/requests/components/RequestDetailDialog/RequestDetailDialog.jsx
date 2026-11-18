@@ -25,6 +25,7 @@ import { CancelDialog } from '@/pages/requests/components/CancelDialog/CancelDia
 import { DecisionDialog } from '@/pages/requests/components/DecisionDialog/DecisionDialog.jsx'
 import { DeliverDialog } from '@/pages/requests/components/DeliverDialog/DeliverDialog.jsx'
 import { DeliveryReceipt } from '@/pages/requests/components/DeliveryReceipt/DeliveryReceipt.jsx'
+import { ReopenDialog } from '@/pages/requests/components/ReopenDialog/ReopenDialog.jsx'
 import { PickDialog } from '@/pages/requests/components/PickDialog/PickDialog.jsx'
 import { RequestItemsTable } from '@/pages/requests/components/RequestItemsTable/RequestItemsTable.jsx'
 import { RequestTimeline } from '@/pages/requests/components/RequestTimeline/RequestTimeline.jsx'
@@ -32,13 +33,20 @@ import { OPEN_STATUSES } from '@/pages/requests/constants/requestOptions.js'
 
 const DIALOGS = {
     [REQUEST_DIALOGS.DECIDE]: DecisionDialog,
+    [REQUEST_DIALOGS.REOPEN]: ReopenDialog,
     [REQUEST_DIALOGS.PICK]: PickDialog,
     [REQUEST_DIALOGS.DELIVER]: DeliverDialog,
     [REQUEST_DIALOGS.CANCEL]: CancelDialog,
 }
 
 const hasActions = (actions) =>
-    Boolean(actions.canCancel || actions.canDecide || actions.canPick || actions.canDeliver)
+    Boolean(
+        actions.canCancel ||
+        actions.canDecide ||
+        actions.canReopen ||
+        actions.canPick ||
+        actions.canDeliver,
+    )
 
 const RequestActions = ({ actions, onOpen }) => (
     <>
@@ -49,6 +57,11 @@ const RequestActions = ({ actions, onOpen }) => (
         )}
         {actions.canDecide && (
             <Button onClick={() => onOpen(REQUEST_DIALOGS.DECIDE)}>Analisar</Button>
+        )}
+        {actions.canReopen && (
+            <Button variant="outline" onClick={() => onOpen(REQUEST_DIALOGS.REOPEN)}>
+                Reabrir análise
+            </Button>
         )}
         {actions.canPick && (
             <Button onClick={() => onOpen(REQUEST_DIALOGS.PICK)}>Separar itens</Button>

@@ -14,6 +14,7 @@ import { useReverseForm } from '@/pages/movements/hooks/useReverseForm.js'
 import { formatQuantity } from '@/utils/formatters.js'
 import { CheckError } from './ReverseDialog.styles.js'
 import { TYPE_HINTS } from '@/pages/movements/constants/movementOptions.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
 
 export const ReverseDialog = ({ movement, onClose, onDone }) => {
     const formId = useId()
@@ -44,12 +45,15 @@ export const ReverseDialog = ({ movement, onClose, onDone }) => {
                     {MOVEMENT_MESSAGES.reverseNotice} {TYPE_HINTS[movement.type]}
                 </Callout>
                 <Field
+                    maxLength={FIELD_LIMITS.JUSTIFICATION}
+                    length={form.values.justification.length}
                     label="Justificativa"
                     htmlFor={`${formId}-justification`}
                     error={form.errors.justification}
                 >
                     <Textarea
                         id={`${formId}-justification`}
+                        maxLength={FIELD_LIMITS.JUSTIFICATION}
                         name="justification"
                         value={form.values.justification}
                         onChange={form.handleChange}

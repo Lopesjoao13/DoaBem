@@ -249,6 +249,29 @@ export const mockDecideRequest = (id, { decision, items, justification }) =>
         { allowedRoles: PERMISSIONS.DECIDE_REQUEST },
     )
 
+export const mockReopenRequest = (id) =>
+    simulateRequest(
+        () => {
+            const request = findOrThrow(db.requests, id)
+            ensureStatus(
+                request,
+                REQUEST_STATUS.APPROVED,
+                'Somente solicitações aprovadas podem ter a análise reaberta.',
+            )
+            request.items.forEach((requestItem) =>
+                Object.assign(requestItem, { approvedQty: null }),
+            )
+            Object.assign(request, {
+                status: REQUEST_STATUS.PENDING,
+                decidedById: null,
+                decidedAt: null,
+                justification: '',
+            })
+            return { id: request.id, status: request.status }
+        },
+        { allowedRoles: PERMISSIONS.DECIDE_REQUEST },
+    )
+
 const approvedItemsOf = (request) =>
     request.items.filter((requestItem) => requestItem.approvedQty > 0)
 

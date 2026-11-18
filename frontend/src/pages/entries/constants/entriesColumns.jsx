@@ -15,7 +15,7 @@ export const buildEntriesColumns = (onOpen) => [
         key: 'source',
         header: 'Entrada / origem',
         sortValue: (row) => describeEntrySource(row),
-        render: (row) => `Entrada #${row.id} — ${describeEntrySource(row)}`,
+        render: (row) => `Entrada #${row.id} - ${describeEntrySource(row)}`,
     },
     { key: 'registeredBy', header: 'Registrado por', sortValue: (row) => row.registeredBy },
     {

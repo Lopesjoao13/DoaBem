@@ -496,7 +496,7 @@ describe.skipIf(!up)('solicitações de ajuda', () => {
         })
     })
 
-    describe('análise (decisão) — só coordenador', () => {
+    describe('análise (decisão) - só coordenador', () => {
         const decide = (id, body) => requests.decideRequest(id, body)
 
         it('operador → 403', async () => {
@@ -829,7 +829,7 @@ describe.skipIf(!up)('movimentações', () => {
         expect(entry.reference).toMatchObject({ entryId: world.entry.id })
         expect(entry.reference.label).toMatch(new RegExp(`Entrada #${world.entry.id}`))
         const found = content.find((row) => row.id === adjustment.id)
-        expect(found.reference.label).toMatch(/Ajuste — Avaria/)
+        expect(found.reference.label).toMatch(/Ajuste - Avaria/)
     })
 
     it('mais recentes primeiro', async () => {

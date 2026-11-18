@@ -2,6 +2,7 @@ export const REQUEST_MESSAGES = {
     created: 'Solicitação criada como pendente. Nada foi reservado.',
     approved: 'Solicitação aprovada. A reserva acontece na separação.',
     rejected: 'Solicitação recusada.',
+    reopened: 'Análise reaberta. A solicitação voltou para pendente.',
     picked: 'Itens separados e reservados.',
     delivered: 'Entrega confirmada. O estoque foi baixado.',
     cancelled: 'Solicitação cancelada.',

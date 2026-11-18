@@ -7,6 +7,7 @@ import { Textarea } from '@/components/Textarea/Textarea.jsx'
 import { Input } from '@/components/Input/Input.jsx'
 import { getTodayIso } from '@/utils/dateRange.js'
 import { getDescribedBy } from '@/utils/a11y.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
 
 export const EntryHeaderFields = ({ values, errors, onChange }) => (
     <Stack>
@@ -22,6 +23,8 @@ export const EntryHeaderFields = ({ values, errors, onChange }) => (
                 />
             </Field>
             <Field
+                maxLength={FIELD_LIMITS.ENTRY_SOURCE}
+                length={(values.anonymous ? '' : values.source).length}
                 label="Origem / doador (opcional)"
                 htmlFor="entry-source"
                 hint="Texto livre. Não é comprovação fiscal."
@@ -31,6 +34,7 @@ export const EntryHeaderFields = ({ values, errors, onChange }) => (
                     aria-describedby={getDescribedBy('entry-source', {
                         hint: 'Texto livre. Não é comprovação fiscal.',
                     })}
+                    maxLength={FIELD_LIMITS.ENTRY_SOURCE}
                     name="source"
                     value={values.anonymous ? '' : values.source}
                     onChange={onChange}
@@ -45,8 +49,19 @@ export const EntryHeaderFields = ({ values, errors, onChange }) => (
             checked={values.anonymous}
             onChange={onChange}
         />
-        <Field label="Observação (opcional)" htmlFor="entry-notes">
-            <Textarea id="entry-notes" name="notes" value={values.notes} onChange={onChange} />
+        <Field
+            maxLength={FIELD_LIMITS.NOTES}
+            length={values.notes.length}
+            label="Observação (opcional)"
+            htmlFor="entry-notes"
+        >
+            <Textarea
+                id="entry-notes"
+                maxLength={FIELD_LIMITS.NOTES}
+                name="notes"
+                value={values.notes}
+                onChange={onChange}
+            />
         </Field>
     </Stack>
 )

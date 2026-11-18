@@ -62,7 +62,7 @@ export const useRequestForm = ({ familyId = '', onSaved }) => {
         () =>
             (families.data?.content ?? EMPTY_ROWS).map((family) => ({
                 value: String(family.id),
-                label: `#${family.id} — ${family.responsibleName}`,
+                label: `#${family.id} - ${family.responsibleName}`,
             })),
         [families.data],
     )

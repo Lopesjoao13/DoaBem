@@ -40,15 +40,15 @@ const findReversal = (movementId) =>
 const describeReference = (movement) => {
     if (movement.type === MOVEMENT_TYPES.ENTRY) {
         const entry = findEntry(movement.donationEntryItemId)
-        return { label: `Entrada #${entry.id} — ${describeEntrySource(entry)}`, entryId: entry.id }
+        return { label: `Entrada #${entry.id} - ${describeEntrySource(entry)}`, entryId: entry.id }
     }
     if (movement.type === MOVEMENT_TYPES.DELIVERY) {
         const request = findRequest(movement.aidRequestItemId)
         const family = getBeneficiary(request.beneficiaryId)?.responsibleName ?? ''
-        return { label: `Solicitação #${request.id} — ${family}`, requestId: request.id }
+        return { label: `Solicitação #${request.id} - ${family}`, requestId: request.id }
     }
     if (movement.type === MOVEMENT_TYPES.ADJUSTMENT) {
-        return { label: `Ajuste — ${ADJUSTMENT_REASON_LABELS[movement.adjustmentReason]}` }
+        return { label: `Ajuste - ${ADJUSTMENT_REASON_LABELS[movement.adjustmentReason]}` }
     }
     return { label: `Estorno do lançamento #${movement.reversesId}` }
 }

@@ -80,7 +80,7 @@ const openRequest = async (status, role = 'COORDINATOR', overrides) => {
     return screen.findByRole('dialog')
 }
 
-describe('RequestsPage — lista', () => {
+describe('RequestsPage - lista', () => {
     it('lista as solicitações e mostra a contagem por estado nas abas (counts do backend)', async () => {
         server.use(
             http.get(`${API}/requests`, () =>
@@ -142,7 +142,7 @@ describe('RequestsPage — lista', () => {
     })
 })
 
-describe('RequestsPage — ações por estado e perfil', () => {
+describe('RequestsPage - ações por estado e perfil', () => {
     it('PENDING: coordenador vê "Analisar" e "Cancelar"; operador não vê "Analisar"', async () => {
         const dialog = await openRequest('PENDING', 'COORDINATOR')
         expect(await within(dialog).findByRole('button', { name: 'Analisar' })).toBeInTheDocument()
@@ -206,7 +206,7 @@ describe('RequestsPage — ações por estado e perfil', () => {
     })
 })
 
-describe('RequestsPage — decisão', () => {
+describe('RequestsPage - decisão', () => {
     const openDecision = async () => {
         const dialog = await openRequest('PENDING')
         await userEvent.click(await within(dialog).findByRole('button', { name: 'Analisar' }))
@@ -294,7 +294,7 @@ describe('RequestsPage — decisão', () => {
     })
 })
 
-describe('RequestsPage — separar, entregar e cancelar', () => {
+describe('RequestsPage - separar, entregar e cancelar', () => {
     it('separar: confirma e chama POST /requests/11/pick', async () => {
         let picked = false
         server.use(

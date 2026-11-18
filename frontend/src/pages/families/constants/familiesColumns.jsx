@@ -11,9 +11,9 @@ export const buildFamiliesColumns = (onOpen) => [
         key: 'neighborhood',
         header: 'Bairro',
         sortValue: (row) => row.neighborhood ?? '',
-        render: (row) => row.neighborhood || '—',
+        render: (row) => row.neighborhood || '-',
     },
-    { key: 'phone', header: 'Telefone', noWrap: true, render: (row) => row.phone || '—' },
+    { key: 'phone', header: 'Telefone', noWrap: true, render: (row) => row.phone || '-' },
     {
         key: 'status',
         header: 'Situação',
