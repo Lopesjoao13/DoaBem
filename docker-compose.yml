@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-doabem}
+      POSTGRES_USER: ${POSTGRES_USER:-doabem}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-doabem_senha_local}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend/doabem
+    restart: unless-stopped
+    depends_on:
+      - db
+    entrypoint: ["sh", "-c", "until nc -z db 5432; do sleep 1; done; exec java -jar /app/app.jar"]
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-doabem}
+      DB_USERNAME: ${POSTGRES_USER:-doabem}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-doabem_senha_local}
+      JWT_SECRET: ${JWT_SECRET:-segredo-local-doabem-troque-em-producao-0123456789}
+      DOABEM_SEED_DEMO_USERS: ${DOABEM_SEED_DEMO_USERS:-true}
+      SPRINGDOC_API_DOCS_ENABLED: ${ENABLE_SWAGGER:-true}
+      SPRINGDOC_SWAGGER_UI_ENABLED: ${ENABLE_SWAGGER:-true}
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${APP_PORT:-8080}:80"
+
+volumes:
+  pgdata:
