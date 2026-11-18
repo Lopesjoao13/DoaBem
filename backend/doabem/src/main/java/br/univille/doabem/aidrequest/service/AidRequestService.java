@@ -257,6 +257,19 @@ public class AidRequestService {
         return decided(request, user, allZero ? AidRequestStatus.REJECTED : AidRequestStatus.APPROVED, justification);
     }
 
+    // Devolve a APROVADA para PENDENTE (nada foi reservado ainda), para o Coordenador refazer a análise.
+    @Transactional
+    public RequestActionResponse reopen(Long id) {
+        AidRequest request = lock(id);
+        ensureStatus(request, AidRequestStatus.APPROVED, "Somente solicitações aprovadas podem ter a análise reaberta.");
+        request.getItems().forEach(line -> line.setApprovedQty(null));
+        request.setStatus(AidRequestStatus.PENDING);
+        request.setDecidedBy(null);
+        request.setDecidedAt(null);
+        request.setJustification(null);
+        return RequestActionResponse.of(request);
+    }
+
     // ---------------------------------------------------------------- separação (RF30)
 
     // RN04/RN17: confere o disponível e reserva de forma atômica, com os itens travados.

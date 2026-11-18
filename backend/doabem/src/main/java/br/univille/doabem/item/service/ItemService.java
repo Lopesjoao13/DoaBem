@@ -12,6 +12,8 @@ import br.univille.doabem.item.dto.UpdateItemRequest;
 import br.univille.doabem.item.entity.Item;
 import br.univille.doabem.item.entity.UnitOfMeasure;
 import br.univille.doabem.item.repository.ItemRepository;
+import br.univille.doabem.stock.service.StockBalance;
+import br.univille.doabem.stock.service.StockService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,10 +28,13 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
+    private final StockService stockService;
 
-    public ItemService(ItemRepository itemRepository, CategoryRepository categoryRepository) {
+    public ItemService(ItemRepository itemRepository, CategoryRepository categoryRepository,
+                       StockService stockService) {
         this.itemRepository = itemRepository;
         this.categoryRepository = categoryRepository;
+        this.stockService = stockService;
     }
 
     @Transactional
@@ -92,6 +97,19 @@ public class ItemService {
     @Transactional
     public ItemResponse setStatus(Long id, Status status) {
         Item item = find(id);
+        if (status == Status.INACTIVE) {
+            StockBalance balance = stockService.balanceOf(id);
+            // RN14: não inativa item com quantidade reservada por solicitação separada.
+            if (balance.reserved().signum() > 0) {
+                throw new ConflictException(
+                        "O item tem quantidade reservada em solicitação separada. Conclua ou cancele antes de inativar.");
+            }
+            // D-07 (decisão do PO em 17/11/2026): não inativa item com saldo em estoque.
+            if (balance.physical().signum() > 0) {
+                throw new ConflictException(
+                        "O item ainda tem saldo em estoque. Zere o saldo por ajuste ou entrega antes de inativar.");
+            }
+        }
         item.setStatus(status);
         return ItemResponse.from(item);
     }

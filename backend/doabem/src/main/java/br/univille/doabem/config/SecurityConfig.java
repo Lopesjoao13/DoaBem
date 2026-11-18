@@ -1,8 +1,8 @@
 package br.univille.doabem.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,10 +31,11 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    // Console H2 e Swagger UI só no perfil dev; as rotas da API seguem protegidas por JWT.
+    // Console H2 e Swagger UI liberados só quando o Swagger está ligado (dev, ou SPRINGDOC_SWAGGER_UI_ENABLED=true).
+    // As rotas da API seguem protegidas por JWT.
     @Bean
     @Order(1)
-    @Profile("dev")
+    @ConditionalOnProperty(name = "springdoc.swagger-ui.enabled", havingValue = "true")
     public SecurityFilterChain devToolsSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/h2-console/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")

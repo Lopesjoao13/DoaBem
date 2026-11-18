@@ -67,10 +67,10 @@ public record MovementResponse(
                 DonationEntry entry = movement.getDonationEntryItem().getDonationEntry();
                 String source = entry.isAnonymous() || entry.getSource() == null || entry.getSource().isBlank()
                         ? ANONYMOUS_SOURCE : entry.getSource();
-                return new Reference("Entrada #" + entry.getId() + " — " + source, entry.getId(), null);
+                return new Reference("Entrada #" + entry.getId() + " - " + source, entry.getId(), null);
             }
             case ADJUSTMENT -> {
-                return new Reference("Ajuste — " + label(movement.getAdjustmentReason()), null, null);
+                return new Reference("Ajuste - " + label(movement.getAdjustmentReason()), null, null);
             }
             case REVERSAL -> {
                 return new Reference("Estorno do lançamento #" + movement.getReverses().getId(), null, null);
@@ -82,7 +82,7 @@ public record MovementResponse(
                 }
                 AidRequest request = movement.getAidRequestItem().getAidRequest();
                 return new Reference(
-                        "Solicitação #" + request.getId() + " — " + request.getBeneficiary().getResponsibleName(),
+                        "Solicitação #" + request.getId() + " - " + request.getBeneficiary().getResponsibleName(),
                         null, request.getId());
             }
         }

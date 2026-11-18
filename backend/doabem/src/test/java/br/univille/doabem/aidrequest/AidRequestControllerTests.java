@@ -531,4 +531,56 @@ class AidRequestControllerTests extends FlowTestSupport {
         doGet("/api/beneficiaries/999999/delivery-summary", operatorToken).andExpect(status().isNotFound());
         doGet("/api/beneficiaries/999999/requests", operatorToken).andExpect(status().isNotFound());
     }
+
+    // ----------------------------------------------------------------- inativação de item (RN14)
+
+    @Test
+    void itemComReservaAtivaNaoPodeSerInativado() throws Exception {
+        receive(arroz, 50);
+        long id = createRequest(familia, requestLine(arroz, 20));
+        approveAll(id);
+        doPost("/api/requests/" + id + "/pick", operatorToken, Map.of()).andExpect(status().isOk());
+
+        doPatch("/api/items/" + arroz.getId() + "/status", coordinatorToken, Map.of("status", "INACTIVE"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("reservada")));
+        doGet("/api/items/" + arroz.getId(), coordinatorToken)
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
+    }
+
+    // D-07 (decisão do PO em 17/11/2026): item com saldo em estoque não pode ser inativado.
+    @Test
+    void itemComSaldoNaoPodeSerInativado() throws Exception {
+        receive(arroz, 50);
+        long id = createRequest(familia, requestLine(arroz, 20));
+        approveAll(id);
+
+        doPatch("/api/items/" + arroz.getId() + "/status", coordinatorToken, Map.of("status", "INACTIVE"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("saldo em estoque")));
+        doGet("/api/items/" + arroz.getId(), coordinatorToken)
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
+    }
+
+    @Test
+    void itemSemSaldoPodeSerInativado() throws Exception {
+        doPatch("/api/items/" + arroz.getId() + "/status", coordinatorToken, Map.of("status", "INACTIVE"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("INACTIVE"));
+    }
+
+    @Test
+    void itemPodeSerInativadoDepoisDeZerarOSaldoPorAjuste() throws Exception {
+        receive(arroz, 50);
+        doPatch("/api/items/" + arroz.getId() + "/status", coordinatorToken, Map.of("status", "INACTIVE"))
+                .andExpect(status().isConflict());
+
+        doPost("/api/stock/adjustments", coordinatorToken,
+                Map.of("itemId", arroz.getId(), "quantity", 50, "adjustmentReason", "LOSS", "notes", "Zerando para inativar"))
+                .andExpect(status().isCreated());
+
+        doPatch("/api/items/" + arroz.getId() + "/status", coordinatorToken, Map.of("status", "INACTIVE"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("INACTIVE"));
+    }
 }

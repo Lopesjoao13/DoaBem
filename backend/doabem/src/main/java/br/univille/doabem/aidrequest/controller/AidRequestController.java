@@ -72,6 +72,12 @@ public class AidRequestController {
         return service.decide(id, request, jwt.getSubject());
     }
 
+    @PostMapping("/{id}/reopen")
+    @PreAuthorize("hasRole('COORDINATOR')")
+    public RequestActionResponse reopen(@PathVariable Long id) {
+        return service.reopen(id);
+    }
+
     @PostMapping("/{id}/pick")
     public RequestActionResponse pick(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
         return service.pick(id, jwt.getSubject());

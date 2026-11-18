@@ -63,12 +63,12 @@ class MovementControllerTests extends FlowTestSupport {
                 .andExpect(jsonPath("$.page.totalPages").value(1))
                 .andExpect(jsonPath("$.page.number").value(0))
                 .andExpect(jsonPath("$.content[?(@.type=='ENTRY')].reference.label")
-                        .value("Entrada #" + entryId + " — Doação anônima/não informado"))
+                        .value("Entrada #" + entryId + " - Doação anônima/não informado"))
                 .andExpect(jsonPath("$.content[?(@.type=='ENTRY')].reference.entryId").value((int) entryId))
                 .andExpect(jsonPath("$.content[?(@.type=='DELIVERY')].reference.label")
-                        .value("Solicitação #" + requestId + " — Maria Souza"))
+                        .value("Solicitação #" + requestId + " - Maria Souza"))
                 .andExpect(jsonPath("$.content[?(@.type=='DELIVERY')].reference.requestId").value((int) requestId))
-                .andExpect(jsonPath("$.content[?(@.type=='ADJUSTMENT')].reference.label").value("Ajuste — Avaria"))
+                .andExpect(jsonPath("$.content[?(@.type=='ADJUSTMENT')].reference.label").value("Ajuste - Avaria"))
                 .andExpect(jsonPath("$.content[0].itemName").value("Arroz"))
                 .andExpect(jsonPath("$.content[0].unitOfMeasure").value("KG"));
 
