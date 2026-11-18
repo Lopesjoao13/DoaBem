@@ -108,4 +108,9 @@ class AuthControllerTests {
     void rotaProtegidaSemTokenRetorna401() throws Exception {
         mockMvc.perform(get("/api/auth/me")).andExpect(status().isUnauthorized());
     }
+
+    @Test
+    void apiInexistenteSemTokenRetorna401() throws Exception {
+        mockMvc.perform(get("/api/nao-existe")).andExpect(status().isUnauthorized());
+    }
 }

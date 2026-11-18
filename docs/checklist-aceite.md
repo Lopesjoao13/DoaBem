@@ -1,4 +1,4 @@
-# Checklist de Aceite — Sprint 01 (DoaBem)
+# Checklist de Aceite - Sprint 01 (DoaBem)
 
 Situação em 06/10/2026. `[x]` = pronto nesta pasta; `[ ]` = depende do grupo ou do repositório.
 

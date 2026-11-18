@@ -1,4 +1,5 @@
 import { ConfirmDialog } from '@/components/ConfirmDialog/ConfirmDialog.jsx'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { CATALOG_MESSAGES, CATALOG_TARGETS } from '@/pages/items/constants/catalogMessages.js'
 import { RECORD_STATUS } from '@/constants/recordStatus.js'
 import { useAsyncAction } from '@/hooks/useAsyncAction.js'
@@ -32,7 +33,7 @@ const describeTarget = ({ kind, record }) => {
 }
 
 export const StatusConfirm = ({ target, onClose, onChanged }) => {
-    const { isRunning, run } = useAsyncAction()
+    const { isRunning, run } = useAsyncAction({ invalidates: INVALIDATES.CATALOG })
     const description = describeTarget(target)
 
     const handleConfirm = async () => {

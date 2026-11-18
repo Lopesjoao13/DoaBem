@@ -3,6 +3,7 @@ import { StateMessage } from '@/components/StateMessage/StateMessage.jsx'
 import { CATEGORY_COLORS } from '@/pages/dashboard/constants/dashboard.js'
 import { formatNumber } from '@/utils/formatters.js'
 import {
+    CategoryName,
     Center,
     CenterLabel,
     CenterText,
@@ -80,7 +81,9 @@ export const CategoryDonut = ({ categories }) => {
                         {segments.map((segment) => (
                             <LegendRow key={segment.categoryId}>
                                 <Swatch $color={segment.color} aria-hidden="true" />
-                                <span>{segment.categoryName}</span>
+                                <CategoryName title={segment.categoryName}>
+                                    {segment.categoryName}
+                                </CategoryName>
                                 <strong>{formatNumber(segment.available)}</strong>
                                 <span>{segment.percent}%</span>
                             </LegendRow>

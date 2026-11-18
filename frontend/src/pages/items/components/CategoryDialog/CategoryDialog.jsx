@@ -9,6 +9,7 @@ import { Input } from '@/components/Input/Input.jsx'
 import { TONES } from '@/constants/tones.js'
 import { useCategoryForm } from '@/pages/items/hooks/useCategoryForm.js'
 import { getDescribedBy } from '@/utils/a11y.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
 
 export const CategoryDialog = ({ category, onClose, onSaved }) => {
     const formId = useId()
@@ -33,20 +34,33 @@ export const CategoryDialog = ({ category, onClose, onSaved }) => {
         >
             <FormStack id={formId} onSubmit={form.submit} noValidate>
                 {form.formError && <Callout tone={TONES.CRITICAL}>{form.formError}</Callout>}
-                <Field label="Nome" htmlFor={`${formId}-name`} error={errors.name}>
+                <Field
+                    maxLength={FIELD_LIMITS.CATEGORY_NAME}
+                    length={values.name.length}
+                    label="Nome"
+                    htmlFor={`${formId}-name`}
+                    error={errors.name}
+                >
                     <Input
                         id={`${formId}-name`}
                         error={errors.name}
                         aria-describedby={getDescribedBy(`${formId}-name`, { error: errors.name })}
+                        maxLength={FIELD_LIMITS.CATEGORY_NAME}
                         name="name"
                         value={values.name}
                         onChange={form.handleChange}
                         autoFocus
                     />
                 </Field>
-                <Field label="Descrição (opcional)" htmlFor={`${formId}-description`}>
+                <Field
+                    maxLength={FIELD_LIMITS.CATEGORY_DESCRIPTION}
+                    length={values.description.length}
+                    label="Descrição (opcional)"
+                    htmlFor={`${formId}-description`}
+                >
                     <Textarea
                         id={`${formId}-description`}
+                        maxLength={FIELD_LIMITS.CATEGORY_DESCRIPTION}
                         name="description"
                         value={values.description}
                         onChange={form.handleChange}

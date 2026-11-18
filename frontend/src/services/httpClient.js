@@ -20,13 +20,38 @@ const expireSession = () => {
     window.location.assign(ROUTES.LOGIN)
 }
 
+const ARRAY_INDEX = /^(.+)\[(\d+)\]$/
+
+const setNested = (target, path, message) => {
+    const keys = path.split('.')
+    keys.reduce((node, key, position) => {
+        const [, name, index] = key.match(ARRAY_INDEX) ?? [null, key, null]
+        const isLast = position === keys.length - 1
+        if (index === null) {
+            node[name] = isLast ? message : (node[name] ?? {})
+            return node[name]
+        }
+        node[name] ??= []
+        node[name][Number(index)] = isLast ? message : (node[name][Number(index)] ?? {})
+        return node[name][Number(index)]
+    }, target)
+}
+
+// O backend devolve chaves planas ("lines[0].itemId", "approved.12"); os formulários esperam objetos aninhados.
+const nestFieldErrors = (fieldErrors) => {
+    if (!fieldErrors) return null
+    const nested = {}
+    Object.entries(fieldErrors).forEach(([path, message]) => setNested(nested, path, message))
+    return nested
+}
+
 const toApiError = (error) => {
     if (!error.response) {
         return new ApiError(NETWORK_ERROR_STATUS, API_MESSAGES.network, null, { cause: error })
     }
     const { status, data } = error.response
     const message = data?.message || HTTP_STATUS_MESSAGES[status] || API_MESSAGES.unexpected
-    return new ApiError(status, message)
+    return new ApiError(status, message, nestFieldErrors(data?.fieldErrors))
 }
 
 const client = axios.create({
@@ -48,9 +73,21 @@ client.interceptors.response.use(
     },
 )
 
+const isSpringPage = (data) =>
+    Array.isArray(data?.content) && data.page !== null && typeof data.page === 'object'
+
+const flattenPage = ({ content, page, ...rest }) => ({
+    ...rest,
+    content,
+    page: page.number,
+    size: page.size,
+    totalElements: page.totalElements,
+    totalPages: page.totalPages,
+})
+
 const request = async (config) => {
     const response = await client.request(config)
-    return response.data
+    return isSpringPage(response.data) ? flattenPage(response.data) : response.data
 }
 
 export const httpClient = {

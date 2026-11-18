@@ -1,9 +1,9 @@
-# Documento de Requisitos — DoaBem (MVP)
+# Documento de Requisitos - DoaBem (MVP)
 
 | | |
 |---|---|
-| **Projeto** | P05 — Sistema de Gestão de Doações e Distribuição de Recursos |
-| **Disciplina** | Engenharia de Software — Fábrica de Software (UNIVILLE) |
+| **Projeto** | P05 - Sistema de Gestão de Doações e Distribuição de Recursos |
+| **Disciplina** | Engenharia de Software - Fábrica de Software (UNIVILLE) |
 | **Cliente / PO** | Prof. William Sestito |
 | **Equipe** | João Miguel Zazula Lopes, Gabriel Hardt, Eduardo Angeli, Kaue Dylon Pereira Bruch, Vitor Viebranz Domingos |
 | **Versão** | 1.0, consolidada após as respostas do PO de 05/10/2026 |
@@ -67,7 +67,7 @@ Fontes: briefing oficial do projeto, roteiro da Sprint 01 e respostas do PO ao l
 | Cancelar separação ainda não entregue | ✔ | ✔ |
 | Cadastrar categorias e itens; inativar item | ✘ (D-05) | ✔ |
 | Aprovar (total/parcial) ou recusar solicitação | ✘ | ✔ |
-| Cancelar solicitação pendente/aprovada | ✘ (D-04) | ✔ |
+| Cancelar solicitação pendente/aprovada | ✘ (D-04, confirmado) | ✔ |
 | Registrar saída por ajuste (perda, avaria, vencimento, transferência) | ✘ | ✔ |
 | Estornar entrada, entrega ou ajuste | ✘ | ✔ |
 | Gerenciar usuários (criar, desativar, atribuir perfil, redefinir senha) | ✘ | ✔ |
@@ -87,7 +87,7 @@ Prioridade (MoSCoW): **Must** obrigatório no MVP · **Should** desejável · **
 | RF03 | Exibir navegação e ações conforme o perfil; negar com 403 no backend as ações não autorizadas e mostrar estado de acesso negado. | Todos | Must | Q19, Q20 |
 | RF04 | Impedir a autenticação de usuários inativos. | Todos | Must | Q18 |
 | RF05 | Cadastrar, editar e desativar usuários internos e atribuir perfil (nome, login/e-mail, perfil, status); sem autoatribuição de perfil elevado. | Coord. | Must | Q18 |
-| RF06 | Iniciar o sistema com um Coordenador pré-configurado para demonstração, com credenciais de teste documentadas (não reais). | — | Must | Q18 |
+| RF06 | Iniciar o sistema com um Coordenador pré-configurado para demonstração, com credenciais de teste documentadas (não reais). | - | Must | Q18 |
 | RF07 | Redefinir temporariamente a senha de um usuário por ação controlada, ou documentar o procedimento administrativo equivalente. | Coord. | Should | Q19 |
 
 ### 3.2 Categorias e itens
@@ -142,7 +142,7 @@ Prioridade (MoSCoW): **Must** obrigatório no MVP · **Should** desejável · **
 | RF33 | Cancelar solicitação PENDENTE, APROVADA ou SEPARADA (nada entregue) com motivo obrigatório, liberando as reservas existentes. | Todos* | Must | Q09 |
 | RF34 | Consultar o detalhe da entrega (família, itens, quantidades, data/hora e usuário) como comprovante digital. | Todos | Must | Q12 |
 
-\* Quem cancela cada estado ainda precisa ser confirmado com o PO (dúvida D-04).
+\* Confirmado pelo PO em 17/11/2026 (D-04): o Coordenador cancela PENDENTE e APROVADA; Operador e Coordenador cancelam SEPARADA.
 
 ### 3.7 Dashboard
 
@@ -211,7 +211,7 @@ stateDiagram-v2
 | PENDENTE | RECUSADA | Coordenador | Nenhum | Justificativa |
 | APROVADA | SEPARADA | Operador/Coord. | RESERVA (atômica) | Disponível suficiente |
 | SEPARADA | ENTREGUE | Operador/Coord. | Consome reserva; SAÍDA | Confirmação do resumo fechado |
-| PENDENTE / APROVADA | CANCELADA | Coordenador (D-04) | Nenhum | Motivo |
+| PENDENTE / APROVADA | CANCELADA | Coordenador (D-04, confirmado) | Nenhum | Motivo |
 | SEPARADA | CANCELADA | Operador/Coord. | Libera as reservas | Motivo; nada entregue |
 
 Estados finais: ENTREGUE, RECUSADA e CANCELADA. A aprovação não expira automaticamente (Q09).
@@ -240,43 +240,43 @@ Estados finais: ENTREGUE, RECUSADA e CANCELADA. A aprovação não expira automa
 
 ## 8. Critérios de aceite (Dado / Quando / Então)
 
-**CA01 — Entrada com vários itens (RF12 a RF15)**
+**CA01 - Entrada com vários itens (RF12 a RF15)**
 - **Dado** um item em KG e um item em UN ativos, **quando** o Operador registra uma entrada com 80,5 kg e 20 un e confirma, **então** são criadas duas movimentações ENTRADA na mesma transação e os saldos físicos sobem.
 - **E** se uma linha tiver 2,5 un ou quantidade ≤ 0, **então** nenhuma linha é gravada e o erro é exibido.
 
-**CA02 — Solicitação e aprovação parcial (RF26, RF28)**
+**CA02 - Solicitação e aprovação parcial (RF26, RF28)**
 - **Dado** uma solicitação PENDENTE com 10 un de Arroz, **quando** o Coordenador aprova 6 un sem justificar, **então** o sistema exige justificativa.
 - **Quando** informa a justificativa, **então** o estado vai a APROVADA com 6 un aprovadas e o saldo não muda. Aprovar mais do que o solicitado é rejeitado.
 
-**CA03 — Separação acima do saldo (RF30, RN01, RN04)**
+**CA03 - Separação acima do saldo (RF30, RN01, RN04)**
 - **Dado** uma solicitação APROVADA de 30 un e disponível de 20 un, **quando** o usuário tenta separar, **então** a separação é bloqueada, nenhuma reserva é criada e a mensagem orienta a revisar a solicitação.
 
-**CA04 — Separação com reserva (RF30)**
+**CA04 - Separação com reserva (RF30)**
 - **Dado** disponível 50 un e solicitação APROVADA de 20 un, **quando** o usuário separa, **então** o estado vai a SEPARADA, o reservado sobe 20, o disponível cai para 30 e o físico não muda.
 
-**CA05 — Entrega com baixa (RF31, RN05)**
+**CA05 - Entrega com baixa (RF31, RN05)**
 - **Dado** uma solicitação SEPARADA, **quando** o usuário confirma o resumo fechado, **então** o estado vai a ENTREGUE, a reserva é consumida, o físico baixa a quantidade entregue e a entrega registra família, itens, quantidades, data/hora e usuário. Não há campo para editar quantidades nesta etapa.
 
-**CA06 — Cancelamento com liberação (RF33, RN06)**
+**CA06 - Cancelamento com liberação (RF33, RN06)**
 - **Dado** uma solicitação SEPARADA, **quando** é cancelada com motivo, **então** o estado vai a CANCELADA, as reservas são liberadas e o disponível volta ao valor anterior. Cancelamento sem motivo ou após a entrega é recusado.
 
-**CA07 — Ajuste e estorno auditáveis (RF19, RF21, RN22)**
+**CA07 - Ajuste e estorno auditáveis (RF19, RF21, RN22)**
 - **Dado** o Coordenador logado, **quando** registra uma saída por ajuste "avaria" de 2 un com observação, **então** surge uma movimentação AJUSTE com usuário e data.
 - **Quando** estorna uma entrada sem justificativa ou com saldo disponível insuficiente, **então** o sistema recusa.
 - **Quando** estorna com justificativa e saldo suficiente, **então** cria movimentação compensatória vinculada ao original; um segundo estorno do mesmo lançamento é impedido.
 
-**CA08 — Controle de acesso (RF03, RF04, RNF02)**
+**CA08 - Controle de acesso (RF03, RF04, RNF02)**
 - **Dado** um Operador logado, **quando** tenta aprovar solicitação, ajustar estoque, estornar ou abrir Usuários, inclusive por chamada direta à API, **então** a interface não oferece a ação e a API responde 403. Usuário inativo não consegue autenticar.
 
-**CA09 — Dashboard e históricos consistentes (RF20, RF24, RF35, RF36)**
+**CA09 - Dashboard e históricos consistentes (RF20, RF24, RF35, RF36)**
 - **Dado** as operações dos cenários anteriores, **quando** o usuário abre o dashboard com o período padrão de 30 dias, **então** entradas, entregas, itens críticos, pendentes e top 5 críticos batem com o estoque e com o histórico.
 - Alterar o período muda só entradas e entregas; os históricos do item e da família mostram as operações com responsáveis.
 
-**CA10 — Inativação de item (RF10, RN14)**
+**CA10 - Inativação de item (RF10, RN14)**
 - **Dado** um item com reserva ativa, **quando** o Coordenador tenta inativar, **então** a ação é bloqueada com o motivo visível.
 - **Dado** um item inativado, **então** ele não aparece em novas entradas, solicitações e ajustes, mas continua nos históricos.
 
-**CA11 — Item crítico (RF18, RN11)**
+**CA11 - Item crítico (RF18, RN11)**
 - **Dado** um item com mínimo 10 un, **quando** o saldo é 10 un ou 8 un, **então** ele aparece como "Crítico" no estoque e no dashboard, com rótulo textual além da cor.
 
 ## 9. Decisões do PO que alteram artefatos já feitos
@@ -287,19 +287,19 @@ Estados finais: ENTREGUE, RECUSADA e CANCELADA. A aprovação não expira automa
 | Protótipo (Lovable) | Acrescentar tela de Usuários; detalhe de entrada; ação "Registrar saída por ajuste"; estados APROVADA/SEPARADA/ENTREGUE; campo validade informativa e "Doação anônima"; remover documento do beneficiário; mostrar "Última entrega" e entregas dos últimos 30 dias; estorno com vínculo; filtro de datas no dashboard com cartões "atual" ou "no período"; remover exportação CSV do escopo. |
 | Fluxo de telas | Inclui Usuários e detalhe da entrega/entrada (nove telas mínimas do PO). Aplicado em `docs/mockups/`. |
 
-## 10. Dúvidas remanescentes para o PO
+## 10. Dúvidas para o PO (D-03, D-04, D-07 e D-09 respondidas em 17/11/2026)
 
 | ID | Pergunta | Proposta da equipe |
 |---|---|---|
 | D-01 | O "saldo" comparado ao estoque mínimo é o físico ou o disponível (físico − reservado)? | Disponível, pois é o que pode ser distribuído. |
 | D-02 | No estorno de uma entrega, se os itens não retornaram, qual é o tratamento justificado (sem criar estoque fictício)? | Não gerar movimentação de estoque e orientar o uso de ajuste, mantendo o motivo. |
-| D-03 | Entradas e ajustes podem ser estornados? E um estorno pode ser estornado? | Entradas, entregas e ajustes sim; estorno de estorno não. |
-| D-04 | Quem cancela cada estado? O Operador pode cancelar uma PENDENTE criada por ele? | Coordenador cancela PENDENTE/APROVADA; Operador e Coordenador cancelam SEPARADA. |
+| D-03 | Entradas e ajustes podem ser estornados? E um estorno pode ser estornado? | Entradas, entregas e ajustes sim; estorno de estorno não. **Respondida pelo PO em 17/11/2026: confirmado.** |
+| D-04 | Quem cancela cada estado? O Operador pode cancelar uma PENDENTE criada por ele? | Coordenador cancela PENDENTE/APROVADA; Operador e Coordenador cancelam SEPARADA. **Respondida pelo PO em 17/11/2026: confirmado.** |
 | D-05 | O Operador pode cadastrar categorias e itens? | Somente o Coordenador cadastra e edita; Operador consulta. |
 | D-06 | Aprovação parcial com todas as quantidades iguais a zero equivale a recusa? | Sim, tratada como recusa com justificativa. |
-| D-07 | Inativar item com saldo positivo: bloqueia ou só avisa? Qual "solução operacional"? | Avisar e bloquear até o saldo disponível ser zerado por ajuste ou entrega. |
+| D-07 | Inativar item com saldo positivo: bloqueia ou só avisa? Qual "solução operacional"? | Avisar e bloquear até o saldo disponível ser zerado por ajuste ou entrega. **Respondida pelo PO em 17/11/2026: bloquear.** |
 | D-08 | Reservas e liberações aparecem no histórico do usuário ou só na auditoria? | Só os quatro tipos do PO na lista; reservas no detalhe da solicitação. |
-| D-09 | Quando a família pode ser inativada e o que acontece com solicitações em andamento? | Inativação bloqueada com solicitação PENDENTE, APROVADA ou SEPARADA. |
+| D-09 | Quando a família pode ser inativada e o que acontece com solicitações em andamento? | Inativação bloqueada com solicitação PENDENTE, APROVADA ou SEPARADA. **Respondida pelo PO em 17/11/2026: bloquear.** |
 | D-10 | "Cestas prontas" são um item comum em UN (sem composição)? | Sim, item comum, sem composição. |
 | D-11 | A redefinição de senha é ação do sistema ou procedimento administrativo documentado? | Ação do Coordenador gerando senha temporária com troca obrigatória, se houver tempo; senão, procedimento documentado. |
 

@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { ALL_FILTER } from '@/constants/stockFilters.js'
+import { QUERY_KEYS, STALE_TIME } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useFilterParams } from '@/hooks/useFilterParams.js'
 import { listCategories, listItems } from '@/services/catalogService.js'
@@ -18,9 +19,12 @@ export const useCatalog = () => {
     )
     const { tab, itemStatus, itemSearch, itemCategoryId } = filters
 
-    const loadItems = useCallback(() => listItems({ status: itemStatus }), [itemStatus])
-    const items = useFetch(loadItems)
-    const categories = useFetch(listCategories)
+    const items = useFetch([QUERY_KEYS.ITEMS, { status: itemStatus }], () =>
+        listItems({ status: itemStatus }),
+    )
+    const categories = useFetch(QUERY_KEYS.CATEGORIES, () => listCategories(), {
+        staleTime: STALE_TIME.REFERENCE,
+    })
     const itemRows = items.data?.content ?? EMPTY_ROWS
 
     const visibleItems = useMemo(

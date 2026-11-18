@@ -1,6 +1,6 @@
-# Registro de Decisões e Dúvidas — DoaBem
+# Registro de Decisões e Dúvidas - DoaBem
 
-Atualizado em 06/10/2026, após as respostas do PO (entrevista de 05/10/2026). O detalhamento completo está em `docs/requisitos.md`.
+Atualizado em 17/11/2026. Respostas do PO: entrevista de 05/10/2026 e confirmação de 17/11/2026 (D-03, D-04, D-07 e D-09). O detalhamento completo está em `docs/requisitos.md`.
 
 ## 1. Decisões de negócio (respondidas pelo PO)
 
@@ -48,13 +48,13 @@ Atualizado em 06/10/2026, após as respostas do PO (entrevista de 05/10/2026). O
 |---|---|---|---|
 | D-01 | O saldo comparado ao mínimo é físico ou disponível? | Disponível | Pendente |
 | D-02 | Estorno de entrega com itens não devolvidos: qual tratamento? | Sem movimentação de estoque; orientar ajuste | Pendente |
-| D-03 | Ajustes e entradas podem ser estornados? Estorno de estorno? | Sim, exceto estorno de estorno | Pendente |
-| D-04 | Quem cancela cada estado? | Coordenador cancela PENDENTE/APROVADA; ambos cancelam SEPARADA | Pendente |
+| D-03 | Ajustes e entradas podem ser estornados? Estorno de estorno? | Sim, exceto estorno de estorno | **Respondida (17/11/2026):** sim, exceto estorno de estorno |
+| D-04 | Quem cancela cada estado? | Coordenador cancela PENDENTE/APROVADA; ambos cancelam SEPARADA | **Respondida (17/11/2026):** Coordenador cancela PENDENTE e APROVADA; Operador e Coordenador cancelam SEPARADA |
 | D-05 | Operador cadastra itens e categorias? | Só o Coordenador | Pendente |
 | D-06 | Aprovar parcial com tudo zero equivale a recusa? | Sim | Pendente |
-| D-07 | Inativar item com saldo: bloqueia ou avisa? | Avisar e bloquear até zerar o saldo disponível | Pendente |
+| D-07 | Inativar item com saldo: bloqueia ou avisa? | Avisar e bloquear até zerar o saldo disponível | **Respondida (17/11/2026):** bloquear |
 | D-08 | Reservas/liberações aparecem na lista de movimentações? | Só no detalhe da solicitação | Pendente |
-| D-09 | Quando inativar família e o que ocorre com solicitações abertas? | Bloquear com solicitação em andamento | Pendente |
+| D-09 | Quando inativar família e o que ocorre com solicitações abertas? | Bloquear com solicitação em andamento | **Respondida (17/11/2026):** bloquear |
 | D-10 | "Cestas prontas" são item comum em UN? | Sim, sem composição | Pendente |
 | D-11 | Redefinição de senha: ação do sistema ou procedimento? | Ação do Coordenador, com troca obrigatória, se houver tempo | Pendente |
 

@@ -22,3 +22,15 @@ export const ErrorText = styled.span`
     font-size: 12px;
     color: var(--red-500);
 `
+
+export const Footer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+`
+
+export const Counter = styled.span`
+    margin-left: auto;
+    font-size: 12px;
+    color: ${({ $isAtLimit }) => ($isAtLimit ? 'var(--red-500)' : 'var(--color-fg-muted)')};
+`

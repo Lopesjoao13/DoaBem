@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import { queryClient } from '@/lib/queryClient.js'
 import { USE_MOCK } from '@/constants/api.js'
 import { clearSession, loadSession, saveSession } from '@/services/sessionStorageService.js'
 import { AuthContext } from './AuthContext.js'
@@ -7,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [session, setSession] = useState(loadSession)
 
     const signIn = useCallback((newSession) => {
+        queryClient.clear()
         saveSession(newSession)
         setSession(newSession)
     }, [])
@@ -22,6 +24,7 @@ export const AuthProvider = ({ children }) => {
 
     const signOut = useCallback(() => {
         clearSession()
+        queryClient.clear()
         setSession(null)
     }, [])
 

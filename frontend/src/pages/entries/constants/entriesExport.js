@@ -7,7 +7,7 @@ export const ENTRIES_EXPORT_COLUMNS = [
     { header: 'Origem', value: (row) => describeEntrySource(row) },
     {
         header: 'Itens recebidos',
-        value: (row) => row.receivedItems.map((item) => item.itemName).join(', '),
+        value: (row) => (row.receivedItems ?? []).map((item) => item.itemName).join(', '),
     },
     { header: 'Registrado por', value: (row) => row.registeredBy },
 ]

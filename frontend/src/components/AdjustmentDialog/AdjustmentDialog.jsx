@@ -12,9 +12,10 @@ import { UNIT_LABELS } from '@/constants/units.js'
 import { useAdjustmentForm } from '@/hooks/useAdjustmentForm.js'
 import { getDescribedBy } from '@/utils/a11y.js'
 import { formatQuantity } from '@/utils/formatters.js'
-import { getQuantityStep } from '@/utils/quantity.js'
+import { getQuantityStep, sanitizeQuantity } from '@/utils/quantity.js'
 import { REASON_OPTIONS, SELECT_REASON } from '@/constants/adjustmentOptions.js'
 import { SELECT_ITEM } from '@/constants/formPlaceholders.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
 
 export const AdjustmentDialog = ({ initialItemId, onClose, onSaved }) => {
     const formId = useId()
@@ -72,7 +73,15 @@ export const AdjustmentDialog = ({ initialItemId, onClose, onSaved }) => {
                                     : undefined
                             }
                             value={values.quantity}
-                            onChange={form.handleChange}
+                            onChange={(event) =>
+                                form.changeField(
+                                    'quantity',
+                                    sanitizeQuantity(
+                                        event.target.value,
+                                        selectedItem?.unitOfMeasure,
+                                    ),
+                                )
+                            }
                             error={errors.quantity}
                             aria-describedby={getDescribedBy(`${formId}-quantity`, {
                                 error: errors.quantity,
@@ -96,9 +105,16 @@ export const AdjustmentDialog = ({ initialItemId, onClose, onSaved }) => {
                         />
                     </Field>
                 </FormRow>
-                <Field label="Observação" htmlFor={`${formId}-notes`} error={errors.notes}>
+                <Field
+                    maxLength={FIELD_LIMITS.NOTES}
+                    length={values.notes.length}
+                    label="Observação"
+                    htmlFor={`${formId}-notes`}
+                    error={errors.notes}
+                >
                     <Textarea
                         id={`${formId}-notes`}
+                        maxLength={FIELD_LIMITS.NOTES}
                         name="notes"
                         value={values.notes}
                         onChange={form.handleChange}

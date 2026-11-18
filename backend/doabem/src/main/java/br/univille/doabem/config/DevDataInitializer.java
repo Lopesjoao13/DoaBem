@@ -4,13 +4,14 @@ import br.univille.doabem.user.entity.AppUser;
 import br.univille.doabem.user.entity.Role;
 import br.univille.doabem.user.repository.AppUserRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-// RF06: usuários de demonstração, apenas no perfil dev. Credenciais fictícias, não usar em produção.
+// RF06: usuários de demonstração. Ligado no perfil dev e, no docker compose, por DOABEM_SEED_DEMO_USERS=true.
+// Credenciais fictícias: não ligar em produção real.
 @Component
-@Profile("dev")
+@ConditionalOnProperty(name = "doabem.seed-demo-users", havingValue = "true")
 public class DevDataInitializer implements CommandLineRunner {
 
     private final AppUserRepository repository;

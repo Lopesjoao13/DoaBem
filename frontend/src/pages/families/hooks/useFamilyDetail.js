@@ -1,9 +1,10 @@
-import { useCallback } from 'react'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { getBeneficiary } from '@/services/beneficiaryService.js'
 
 export const useFamilyDetail = (id) => {
-    const loadFamily = useCallback(() => getBeneficiary(id), [id])
-    const { data, error, reload } = useFetch(loadFamily)
+    const { data, error, reload } = useFetch([QUERY_KEYS.BENEFICIARIES, id], () =>
+        getBeneficiary(id),
+    )
     return { family: data, error, reload }
 }

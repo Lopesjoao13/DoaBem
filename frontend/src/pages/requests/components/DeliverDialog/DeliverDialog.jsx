@@ -11,6 +11,7 @@ import { TONES } from '@/constants/tones.js'
 import { useReasonForm } from '@/pages/requests/hooks/useReasonForm.js'
 import { deliverRequest } from '@/services/requestService.js'
 import { DELIVER_COLUMNS } from '@/pages/requests/constants/deliverColumns.jsx'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
 
 export const DeliverDialog = ({ request, onClose, onDone }) => {
     const formId = useId()
@@ -56,9 +57,15 @@ export const DeliverDialog = ({ request, onClose, onDone }) => {
                     {REQUEST_MESSAGES.deliverNotice}
                 </Callout>
                 <DataTable columns={DELIVER_COLUMNS} rows={items} />
-                <Field label="Observação (opcional)" htmlFor={`${formId}-notes`}>
+                <Field
+                    maxLength={FIELD_LIMITS.NOTES}
+                    length={form.values.notes.length}
+                    label="Observação (opcional)"
+                    htmlFor={`${formId}-notes`}
+                >
                     <Textarea
                         id={`${formId}-notes`}
+                        maxLength={FIELD_LIMITS.NOTES}
                         name="notes"
                         value={form.values.notes}
                         onChange={form.handleChange}

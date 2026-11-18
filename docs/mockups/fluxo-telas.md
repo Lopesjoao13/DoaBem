@@ -1,9 +1,9 @@
-# Fluxo de telas e identidade visual — DoaBem
+# Fluxo de telas e identidade visual - DoaBem
 
 Atualizado em 06/10/2026 com as telas mínimas definidas pelo PO.
 
 - **Capturas reais do protótipo e guia visual:** [`prototipo.md`](./prototipo.md)
-- **Protótipo navegável (dados fictícios):** https://doabem-stock-hub.lovable.app/ — gerado com a versão 1 dos requisitos; precisa receber os ajustes da seção 5 para refletir as respostas do PO.
+- **Protótipo navegável (dados fictícios):** https://doabem-stock-hub.lovable.app/ - gerado com a versão 1 dos requisitos; precisa receber os ajustes da seção 5 para refletir as respostas do PO.
 - **Figma (telas e guia de identidade visual):** https://www.figma.com/design/Epm1g1xvCIwoikzaPzqoTf/Untitled?node-id=0-1
 - **Revisão do protótipo contra os requisitos:** [`revisao-prototipo.md`](./revisao-prototipo.md)
 

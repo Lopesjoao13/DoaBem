@@ -1,4 +1,5 @@
 import { MOVEMENT_MESSAGES } from '@/pages/movements/constants/movementMessages.js'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { MOVEMENT_TYPES } from '@/constants/movementTypes.js'
 import { VALIDATION_MESSAGES } from '@/constants/validationMessages.js'
 import { useForm } from '@/hooks/useForm.js'
@@ -9,6 +10,7 @@ import { isBlank } from '@/utils/validation.js'
 export const useReverseForm = ({ movement, onDone }) => {
     const toast = useToast()
     return useForm({
+        invalidates: INVALIDATES.REQUEST_CHANGE,
         initialValues: { justification: '', itemsReturned: false },
         validate: (values) => {
             const errors = {}

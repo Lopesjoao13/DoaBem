@@ -11,6 +11,6 @@ export const ENTRY_REVIEW_COLUMNS = [
     {
         key: 'expiryDate',
         header: 'Validade (informativa)',
-        render: (row) => (row.expiryDate ? formatDate(row.expiryDate) : '—'),
+        render: (row) => (row.expiryDate ? formatDate(row.expiryDate) : '-'),
     },
 ]

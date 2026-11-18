@@ -1,15 +1,18 @@
 import { useCallback, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { API_MESSAGES } from '@/constants/apiMessages.js'
+import { useToast } from '@/hooks/useToast.js'
 import { hasErrors } from '@/utils/validation.js'
 
 const resolveValue = (valueOrUpdater, current) =>
     typeof valueOrUpdater === 'function' ? valueOrUpdater(current) : valueOrUpdater
 
-export const useForm = ({ initialValues, validate, onSubmit }) => {
+export const useForm = ({ initialValues, validate, onSubmit, invalidates }) => {
+    const toast = useToast()
     const [values, setValues] = useState(initialValues)
     const [errors, setErrors] = useState({})
     const [formError, setFormError] = useState('')
-    const [isSubmitting, setIsSubmitting] = useState(false)
+    const mutation = useMutation({ mutationFn: onSubmit, meta: { invalidates } })
 
     const changeField = useCallback((name, valueOrUpdater) => {
         setValues((current) => ({
@@ -41,17 +44,16 @@ export const useForm = ({ initialValues, validate, onSubmit }) => {
         event?.preventDefault()
         if (!validateNow()) return false
 
-        setIsSubmitting(true)
         try {
-            await onSubmit(values)
+            await mutation.mutateAsync(values)
             return true
         } catch (error) {
             console.error('Falha ao enviar o formulário:', error.message)
-            setFormError(error.message || API_MESSAGES.unexpected)
+            const message = error.message || API_MESSAGES.unexpected
+            setFormError(message)
+            toast.error(message)
             if (error.fieldErrors) setErrors(error.fieldErrors)
             return false
-        } finally {
-            setIsSubmitting(false)
         }
     }
 
@@ -59,7 +61,7 @@ export const useForm = ({ initialValues, validate, onSubmit }) => {
         values,
         errors,
         formError,
-        isSubmitting,
+        isSubmitting: mutation.isPending,
         handleChange,
         changeField,
         reset,

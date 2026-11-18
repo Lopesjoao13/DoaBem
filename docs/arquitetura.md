@@ -1,4 +1,4 @@
-# Arquitetura — DoaBem
+# Arquitetura - DoaBem
 
 > Status: Sprint 01. Itens marcados como **[A CONFIRMAR]** dependem de decisão do grupo. Todos os diagramas estão em Mermaid.
 

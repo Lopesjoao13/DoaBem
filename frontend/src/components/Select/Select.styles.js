@@ -63,6 +63,7 @@ export const List = styled.ul`
     z-index: 70;
     margin: 0;
     padding: 4px;
+    overflow-x: hidden;
     overflow-y: auto;
     list-style: none;
     border: 1px solid var(--color-border-strong);
@@ -82,6 +83,13 @@ export const Option = styled.li`
     font-weight: ${({ $isSelected }) => ($isSelected ? 600 : 400)};
     white-space: nowrap;
     cursor: pointer;
+`
+
+export const OptionLabel = styled.span`
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `
 
 export const Checkbox = styled.span`

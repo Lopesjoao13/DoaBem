@@ -1,4 +1,5 @@
 import { Callout } from '@/components/Callout/Callout.jsx'
+import { INVALIDATES } from '@/constants/queryKeys.js'
 import { ConfirmDialog } from '@/components/ConfirmDialog/ConfirmDialog.jsx'
 import { DataTable } from '@/components/DataTable/DataTable.jsx'
 import { Stack } from '@/components/Stack/Stack.jsx'
@@ -9,7 +10,7 @@ import { pickRequest } from '@/services/requestService.js'
 import { PICK_COLUMNS, getPickRowTone } from '@/pages/requests/constants/pickColumns.jsx'
 
 export const PickDialog = ({ request, onClose, onDone }) => {
-    const { isRunning, run } = useAsyncAction()
+    const { isRunning, run } = useAsyncAction({ invalidates: INVALIDATES.REQUEST_CHANGE })
     const items = request.items.filter((requestItem) => requestItem.approvedQty > 0)
     const hasShortage = items.some((requestItem) => requestItem.approvedQty > requestItem.available)
 

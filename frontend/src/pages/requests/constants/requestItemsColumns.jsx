@@ -9,7 +9,7 @@ export const quantityColumn = (key, header, getValue) => ({
     render: (row) => {
         const value = getValue(row)
         return value === null || value === undefined
-            ? '—'
+            ? '-'
             : formatQuantity(value, row.unitOfMeasure)
     },
 })

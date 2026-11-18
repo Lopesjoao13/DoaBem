@@ -21,6 +21,7 @@ import {
     getUserName,
     normalizeText,
     nowIso,
+    paginate,
 } from './mockHelpers.js'
 import { getBalances } from './mockStock.js'
 
@@ -51,14 +52,17 @@ const countByStatus = () =>
         { [ALL_REQUESTS_TAB]: db.requests.length },
     )
 
-export const mockListRequests = ({ status } = {}) =>
-    simulateRequest(() => ({
-        content: db.requests
+export const mockListRequests = ({ status, page = 0, size } = {}) =>
+    simulateRequest(() => {
+        const rows = db.requests
             .filter((request) => !status || request.status === status)
             .map(toRequestRow)
-            .sort((first, second) => second.createdAt.localeCompare(first.createdAt)),
-        counts: countByStatus(),
-    }))
+            .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+        return {
+            ...paginate(rows, page, size ?? Math.max(rows.length, 1)),
+            counts: countByStatus(),
+        }
+    })
 
 const toRequestItemDetail = (requestItem, balances) => {
     const item = getItem(requestItem.itemId)
@@ -241,6 +245,29 @@ export const mockDecideRequest = (id, { decision, items, justification }) =>
             const allZero = quantities.every((quantity) => quantity === 0)
             const status = allZero ? REQUEST_STATUS.REJECTED : REQUEST_STATUS.APPROVED
             return recordDecision(request, currentUser, status, justification)
+        },
+        { allowedRoles: PERMISSIONS.DECIDE_REQUEST },
+    )
+
+export const mockReopenRequest = (id) =>
+    simulateRequest(
+        () => {
+            const request = findOrThrow(db.requests, id)
+            ensureStatus(
+                request,
+                REQUEST_STATUS.APPROVED,
+                'Somente solicitações aprovadas podem ter a análise reaberta.',
+            )
+            request.items.forEach((requestItem) =>
+                Object.assign(requestItem, { approvedQty: null }),
+            )
+            Object.assign(request, {
+                status: REQUEST_STATUS.PENDING,
+                decidedById: null,
+                decidedAt: null,
+                justification: '',
+            })
+            return { id: request.id, status: request.status }
         },
         { allowedRoles: PERMISSIONS.DECIDE_REQUEST },
     )

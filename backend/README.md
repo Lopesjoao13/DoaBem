@@ -1,4 +1,4 @@
-# Backend — DoaBem
+# Backend - DoaBem
 
 Java 21 + Spring Boot 3.x, monólito modular em camadas. O projeto Maven fica em `backend/doabem`.
 
@@ -15,7 +15,7 @@ O perfil é escolhido em `application.properties` por `spring.profiles.active=${
 | Perfil | Banco | JWT | Uso |
 |---|---|---|---|
 | `dev` (padrão) | H2 em memória, console em `/h2-console` | Segredo fixo de desenvolvimento | Desenvolvimento local |
-| `prod` | PostgreSQL (ainda não provisionado) | `JWT_SECRET`, obrigatório | Produção |
+| `prod` | PostgreSQL (migrations Flyway) | `JWT_SECRET`, obrigatório | Produção e Docker Compose |
 
 ### Perfil dev (padrão)
 
@@ -60,9 +60,9 @@ No PowerShell o argumento `-D...` precisa ficar entre aspas, senão o ponto queb
 
 Observações do prod:
 
-- Console H2 desativado e nenhum usuário de demonstração é criado.
-- `ddl-auto=validate`: o Hibernate não cria nem altera tabelas. Enquanto não houver migrations (Flyway), o schema precisa existir no banco.
-- O PostgreSQL ainda não existe no projeto; o perfil está preparado para quando houver.
+- Console H2 desativado. Usuários de demonstração só são criados com `DOABEM_SEED_DEMO_USERS=true` (o Docker Compose liga por padrão).
+- `ddl-auto=validate`: o Hibernate não cria nem altera tabelas. O schema é criado e atualizado pelo Flyway (`db/migration`) na subida.
+- Para rodar com PostgreSQL e tudo configurado, use o Docker Compose da raiz (veja o [README principal](../README.md#como-executar)).
 
 ### Pelo jar
 
@@ -82,7 +82,7 @@ O log de inicialização mostra `The following 1 profile is active: "dev"` (ou `
 
 ### Swagger (documentação da API)
 
-Disponível só no perfil `dev`, sem exigir token:
+Disponível no perfil `dev` (e no Docker Compose), sem exigir token:
 
 - Interface: `http://localhost:8080/swagger-ui.html`
 - JSON OpenAPI: `http://localhost:8080/v3/api-docs`
@@ -94,7 +94,7 @@ Para testar rotas protegidas:
 3. Clique em *Authorize* (cadeado, no topo), cole só o token (sem o prefixo `Bearer`) e confirme.
 4. As demais rotas passam a enviar o token. Entre com o Operador (`operador@doabem.local`) para ver o 403 nas rotas exclusivas do Coordenador, como `/api/users`.
 
-No perfil `prod` o Swagger fica desativado.
+No perfil `prod` o Swagger fica desativado, a menos que `SPRINGDOC_API_DOCS_ENABLED` e `SPRINGDOC_SWAGGER_UI_ENABLED` sejam `true` (o Docker Compose liga os dois por padrão).
 
 ## Estrutura do código
 

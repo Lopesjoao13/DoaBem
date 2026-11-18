@@ -7,7 +7,7 @@ import { Select } from '@/components/Select/Select.jsx'
 import { UNIT_LABELS } from '@/constants/units.js'
 import { getDescribedBy } from '@/utils/a11y.js'
 import { formatQuantity } from '@/utils/formatters.js'
-import { getQuantityStep } from '@/utils/quantity.js'
+import { getQuantityStep, sanitizeQuantity } from '@/utils/quantity.js'
 import { LineGrid, Lines, RemoveSlot, StyledItemLinesEditor } from './ItemLinesEditor.styles.js'
 import { SELECT_ITEM } from '@/constants/formPlaceholders.js'
 
@@ -56,7 +56,13 @@ const LineRow = ({
                     inputMode="decimal"
                     step={item ? getQuantityStep(item.unitOfMeasure) : undefined}
                     value={line[quantityField]}
-                    onChange={(event) => onChange(line.key, quantityField, event.target.value)}
+                    onChange={(event) =>
+                        onChange(
+                            line.key,
+                            quantityField,
+                            sanitizeQuantity(event.target.value, item?.unitOfMeasure),
+                        )
+                    }
                     error={quantityError}
                     aria-describedby={getDescribedBy(`${id}-qty`, {
                         error: quantityError,

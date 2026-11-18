@@ -2,6 +2,7 @@ package br.univille.doabem.user.service;
 
 import br.univille.doabem.user.dto.CreateUserRequest;
 import br.univille.doabem.user.dto.UpdateUserRequest;
+import br.univille.doabem.user.dto.UserOptionResponse;
 import br.univille.doabem.user.dto.UserResponse;
 import br.univille.doabem.user.entity.AppUser;
 import br.univille.doabem.user.repository.AppUserRepository;
@@ -10,10 +11,12 @@ import br.univille.doabem.common.error.ConflictException;
 import br.univille.doabem.common.error.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -40,6 +43,12 @@ public class UserService {
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
         return UserResponse.from(repository.save(user));
+    }
+
+    // Inclui inativos (continuam nos históricos). Só id e nome: sem e-mail nem perfil.
+    @Transactional(readOnly = true)
+    public List<UserOptionResponse> options() {
+        return repository.findAll(Sort.by("name")).stream().map(UserOptionResponse::from).toList();
     }
 
     @Transactional(readOnly = true)

@@ -5,7 +5,7 @@ export const DescriptionList = ({ items }) => (
         {items.map(({ label, value }) => (
             <div key={label}>
                 <Term>{label}</Term>
-                <Detail>{value || '—'}</Detail>
+                <Detail>{value || '-'}</Detail>
             </div>
         ))}
     </StyledDescriptionList>

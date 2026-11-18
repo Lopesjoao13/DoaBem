@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '@/constants/routes.js'
 import { useAuth } from '@/hooks/useAuth.js'
@@ -12,7 +13,10 @@ export const useLoginForm = () => {
     const [password, setPassword] = useState('')
     const [fieldErrors, setFieldErrors] = useState({})
     const [formError, setFormError] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
+    const loginMutation = useMutation({
+        mutationFn: ({ email: userEmail, password: userPassword }) =>
+            login(userEmail, userPassword),
+    })
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value)
@@ -31,15 +35,13 @@ export const useLoginForm = () => {
 
         if (Object.keys(errors).length > 0) return
 
-        setIsLoading(true)
         try {
-            const session = await login(email, password)
+            const session = await loginMutation.mutateAsync({ email, password })
             signIn(session)
             navigate(ROUTES.DASHBOARD, { replace: true })
         } catch (error) {
             console.error('Falha no login:', error.message)
             setFormError(error.message)
-            setIsLoading(false)
         }
     }
 
@@ -48,7 +50,7 @@ export const useLoginForm = () => {
         password,
         fieldErrors,
         formError,
-        isLoading,
+        isLoading: loginMutation.isPending || loginMutation.isSuccess,
         handleEmailChange,
         handlePasswordChange,
         submitLogin,

@@ -1,4 +1,5 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
+import { QUERY_KEYS } from '@/constants/queryKeys.js'
 import { useFetch } from '@/hooks/useFetch.js'
 import { useFilterParams } from '@/hooks/useFilterParams.js'
 import { listBeneficiaries } from '@/services/beneficiaryService.js'
@@ -19,8 +20,10 @@ export const useFamilies = () => {
     )
     const { status, search } = filters
 
-    const loadFamilies = useCallback(() => listBeneficiaries({ status }), [status])
-    const { data, error, isLoading, reload } = useFetch(loadFamilies)
+    const { data, error, isLoading, reload } = useFetch(
+        [QUERY_KEYS.BENEFICIARIES, { status }],
+        () => listBeneficiaries({ status }),
+    )
     const rows = data?.content ?? EMPTY_ROWS
 
     const families = useMemo(

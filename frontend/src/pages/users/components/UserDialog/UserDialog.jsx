@@ -11,6 +11,7 @@ import { USER_MESSAGES } from '@/pages/users/constants/userMessages.js'
 import { useUserForm } from '@/pages/users/hooks/useUserForm.js'
 import { getDescribedBy } from '@/utils/a11y.js'
 import { ROLE_OPTIONS, SELECT_ROLE } from '@/pages/users/constants/userOptions.js'
+import { FIELD_LIMITS } from '@/constants/fieldLimits.js'
 
 export const UserDialog = ({ user, isSelf, onClose, onSaved }) => {
     const formId = useId()
@@ -37,24 +38,38 @@ export const UserDialog = ({ user, isSelf, onClose, onSaved }) => {
             <FormStack id={formId} onSubmit={form.submit} noValidate>
                 {form.formError && <Callout tone={TONES.CRITICAL}>{form.formError}</Callout>}
                 {isSelf && <Callout tone={TONES.INFO}>{USER_MESSAGES.selfNotice}</Callout>}
-                <Field label="Nome" htmlFor={`${formId}-name`} error={errors.name}>
+                <Field
+                    maxLength={FIELD_LIMITS.USER_NAME}
+                    length={values.name.length}
+                    label="Nome"
+                    htmlFor={`${formId}-name`}
+                    error={errors.name}
+                >
                     <Input
                         id={`${formId}-name`}
                         error={errors.name}
                         aria-describedby={getDescribedBy(`${formId}-name`, { error: errors.name })}
+                        maxLength={FIELD_LIMITS.USER_NAME}
                         name="name"
                         value={values.name}
                         onChange={form.handleChange}
                         autoFocus
                     />
                 </Field>
-                <Field label="E-mail (login)" htmlFor={`${formId}-email`} error={errors.email}>
+                <Field
+                    maxLength={FIELD_LIMITS.USER_EMAIL}
+                    length={values.email.length}
+                    label="E-mail (login)"
+                    htmlFor={`${formId}-email`}
+                    error={errors.email}
+                >
                     <Input
                         id={`${formId}-email`}
                         error={errors.email}
                         aria-describedby={getDescribedBy(`${formId}-email`, {
                             error: errors.email,
                         })}
+                        maxLength={FIELD_LIMITS.USER_EMAIL}
                         name="email"
                         type="email"
                         value={values.email}
@@ -63,6 +78,8 @@ export const UserDialog = ({ user, isSelf, onClose, onSaved }) => {
                 </Field>
                 {!user && (
                     <Field
+                        maxLength={FIELD_LIMITS.USER_PASSWORD}
+                        length={values.password.length}
                         label="Senha inicial"
                         htmlFor={`${formId}-password`}
                         hint="Entre 8 e 72 caracteres."
@@ -75,6 +92,7 @@ export const UserDialog = ({ user, isSelf, onClose, onSaved }) => {
                                 error: errors.password,
                                 hint: 'Entre 8 e 72 caracteres.',
                             })}
+                            maxLength={FIELD_LIMITS.USER_PASSWORD}
                             name="password"
                             type="password"
                             autoComplete="new-password"

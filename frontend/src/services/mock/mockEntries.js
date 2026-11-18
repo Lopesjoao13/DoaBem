@@ -23,7 +23,7 @@ const toEntrySummary = (entry) => ({
     registeredBy: getUserName(entry.userId),
     createdAt: entry.createdAt,
     receivedItems: entry.items.map(({ itemId }) => ({
-        itemId: String(itemId),
+        itemId,
         itemName: getItem(itemId).name,
     })),
 })
